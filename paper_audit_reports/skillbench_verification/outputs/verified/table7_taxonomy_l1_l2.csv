@@ -1,0 +1,14 @@
+boundary_l1,type_l2,github_n,github_pct,skillbench_verified_n,skillbench_verified_pct,row
+Document–Code,over_promised,250,24.5,73,45.6,type
+Document–Code,semantic_conflict,93,9.1,16,10.0,type
+Document–Code,under_promised,1,0.1,1,0.6,type
+Document–Code,subtotal,344,33.7,90,56.2,subtotal
+Document–Document,shared_concept_definition_conflict,162,15.9,27,16.9,type
+Document–Document,cross_document_process_conflict,81,7.9,2,1.2,type
+Document–Document,interface_contract_mismatch,69,6.8,16,10.0,type
+Document–Document,subtotal,312,30.5,45,28.1,subtotal
+Skill–Environment,environment_fact_conflict,274,26.8,21,13.1,type
+Skill–Environment,external_resource_invalid,44,4.3,3,1.9,type
+Skill–Environment,external_service_contract_change,30,2.9,1,0.6,type
+Skill–Environment,dependency_version_drift,18,1.8,0,0.0,type
+Skill–Environment,subtotal,366,35.8,25,15.6,subtotal

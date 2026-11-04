@@ -1,0 +1,17 @@
+Boundary,Level-2 type,Level-3 type,GitHub Skills,SkillBench,Total
+Skill--Env.,environment_fact_conflict,---,274,87,361
+Doc--Code,over_promised,unimplemented_feature,153,87,240
+Doc--Doc,shared_concept_definition_conflict,---,162,40,202
+Doc--Doc,interface_contract_mismatch,---,69,29,98
+Doc--Doc,cross_document_process_conflict,---,81,5,86
+Doc--Code,over_promised,missing_constraint_or_exception,46,21,67
+Skill--Env.,external_resource_invalid,---,44,12,56
+Doc--Code,semantic_conflict,semantic_param_conflict,35,16,51
+Doc--Code,over_promised,missing_return_field,30,20,50
+Doc--Code,over_promised,missing_parameter,21,21,42
+Skill--Env.,external_service_contract_change,---,30,10,40
+Skill--Env.,dependency_version_drift,---,18,16,34
+Doc--Code,semantic_conflict,workflow_conflict,28,2,30
+Doc--Code,semantic_conflict,semantic_return_conflict,19,5,24
+Doc--Code,semantic_conflict,side_effect_conflict,11,5,16
+Doc--Code,under_promised,implicit_param_support,1,1,2

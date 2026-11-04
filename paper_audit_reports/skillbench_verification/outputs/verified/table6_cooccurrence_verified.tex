@@ -1,0 +1,18 @@
+\begin{table}[t]
+  \centering
+  \caption{Cross-boundary co-occurrence $P(j \mid i)$ at the artifact-boundary level, GitHub as audited vs SkillBench after verification.}
+  \label{tab:rq1-verified-cooccurrence}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
+  \begin{tabular}{lrr}
+    \toprule
+    Condition (order: the other two boundaries) & GitHub (unverified) & SkillBench (verified) \\
+    \midrule
+    P(j | i), i = Document–Code & 0.56 / 0.60 & 0.24 / 0.08 \\
+    P(j | i), i = Document–Document & 0.52 / 0.63 & 0.50 / 0.17 \\
+    P(j | i), i = Skill–Environment & 0.46 / 0.52 & 0.21 / 0.21 \\
+    \bottomrule
+  \end{tabular}
+  }%
+\end{table}

@@ -1,0 +1,45 @@
+\begin{table}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{3.0pt}
+  \caption{Inconsistent findings by corpus and by whether a skill ships anything
+    besides documentation.}
+  \label{tab:finding_stats}
+  \begin{tabular}{llcccccc}
+    \toprule
+    Dataset & Category & \#Skills & $\ge$1 Inc. & Total Find. & Mean & Max
+      & Find./kLine \\
+    \midrule
+    GitHub Skills
+      & Doc-only      & 340 & 202 (59.4\%) &   421 & 1.24 &  7 & 6.17 \\
+      & w/ artifacts  & 148 & 127 (85.8\%) &   601 & 4.06 & 18 & 0.98 \\
+      & All           & 488 & 329 (67.4\%) & 1{,}022 & 2.09 & 18 & 1.50 \\
+    \midrule
+    SkillBench Skills
+      & Doc-only      &  41 &  25 (61.0\%) &    59 & 1.44 &  8 & 2.05 \\
+      & w/ artifacts  &  46 &  31 (67.4\%) &   101 & 2.20 & 18 & 0.91 \\
+      & All           &  87 &  56 (64.4\%) &   160 & 1.84 & 18 & 1.14 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{2pt}
+  \begin{minipage}{\linewidth}
+    \footnotesize\raggedright
+    \emph{Doc-only}: every file in the skill directory is documentation
+    (\texttt{.md}, \texttt{.mdx}, \texttt{.markdown}, \texttt{.rst},
+    \texttt{.txt}, \texttt{.org}); otherwise the skill ships artifacts, which may
+    be scripts, configuration or data (26 of the 194 artifact-bearing skills
+    ship no code). \emph{Find./kLine}: inconsistencies per thousand lines of the
+    skill's own files, documentation and code together.\\[1pt]
+    Counts and shares favour artifact-bearing skills; per line the ordering
+    reverses, because doc-only skills are small (68k lines against 614k in
+    GitHub) and every line of them is the kind of text a contract inconsistency
+    lives in. The gap narrows but does not reverse if the denominator is
+    documentation lines only (0.62 vs.\ 0.36 in GitHub, 0.20 vs.\ 0.14 in
+    SkillBench). The GitHub half is the audit output \emph{without} independent
+    re-verification and the SkillBench half is the post-verification survivors,
+    so the two halves are not equally reliable; on the verified corpus the two
+    skill kinds do not differ significantly by prevalence (61.0\% vs.\ 67.4\%,
+    Fisher $p=0.65$).
+  \end{minipage}
+\end{table}

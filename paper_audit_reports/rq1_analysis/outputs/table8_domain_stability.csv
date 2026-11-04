@@ -1,0 +1,6 @@
+Domain,Skills,Findings,Skill--Env. (\%),Doc--Code (\%),Doc--Doc (\%),$\geq$2 boundaries (\%)
+software-engineering,411,808,36.5\%,32.7\%,30.8\%,52.6\%
+media-content-production,41,142,28.9\%,46.5\%,24.6\%,71.0\%
+office-white-collar,38,129,35.7\%,41.1\%,23.3\%,58.6\%
+finance-economics,27,105,41.9\%,32.4\%,25.7\%,65.2\%
+natural-science,20,61,32.8\%,52.5\%,14.8\%,60.0\%

@@ -1,0 +1,25 @@
+\begin{table}[t]
+  \centering
+  \caption{Distribution of inconsistencies over the taxonomy level-2 types, before and after verifying the SkillBench findings.}
+  \label{tab:rq1-verified-l2}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Level-2 type & GitHub (unverified) (n) & GitHub (unverified) (\%) & SkillBench (as audited) (n) & SkillBench (as audited) (\%) & SkillBench (verified) (n) & SkillBench (verified) (\%) \\
+    \midrule
+    over\_promised & 250 & 24.5\% & 149 & 39.5\% & 73 & 45.6\% \\
+    shared\_concept\_definition\_conflict & 162 & 15.9\% & 40 & 10.6\% & 27 & 16.9\% \\
+    environment\_fact\_conflict & 274 & 26.8\% & 87 & 23.1\% & 21 & 13.1\% \\
+    interface\_contract\_mismatch & 69 & 6.8\% & 29 & 7.7\% & 16 & 10.0\% \\
+    semantic\_conflict & 93 & 9.1\% & 26 & 6.9\% & 16 & 10.0\% \\
+    external\_resource\_invalid & 44 & 4.3\% & 12 & 3.2\% & 3 & 1.9\% \\
+    cross\_document\_process\_conflict & 81 & 7.9\% & 5 & 1.3\% & 2 & 1.2\% \\
+    under\_promised & 1 & 0.1\% & 1 & 0.3\% & 1 & 0.6\% \\
+    external\_service\_contract\_change & 30 & 2.9\% & 10 & 2.7\% & 1 & 0.6\% \\
+    dependency\_version\_drift & 18 & 1.8\% & 16 & 4.2\% & 0 & 0.0\% \\
+    \bottomrule
+  \end{tabular}
+  }%
+\end{table}

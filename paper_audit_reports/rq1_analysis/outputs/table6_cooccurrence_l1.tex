@@ -1,0 +1,23 @@
+\begin{table}[t]
+  \centering
+  \caption{Conditional co-occurrence of artifact boundaries within the same skill, P(boundary $j$ $\mid$ boundary $i$). Rows condition on skills that contain boundary $i$.}
+  \label{tab:rq1-cooccurrence-l1}
+  \small
+  \setlength{\tabcolsep}{4pt}
+
+  \begin{tabular}{lrrr}
+    \toprule
+    Condition & GitHub Skills & SkillBench & Both \\
+    \midrule
+    --- & --- & --- & --- \\
+    P(Document–Code | Skill–Environment) & 0.46 & 0.56 & 0.48 \\
+    P(Document–Document | Skill–Environment) & 0.52 & 0.35 & 0.49 \\
+    P(Skill–Environment | Document–Code) & 0.60 & 0.56 & 0.60 \\
+    --- & --- & --- & --- \\
+    P(Document–Document | Document–Code) & 0.56 & 0.38 & 0.52 \\
+    P(Skill–Environment | Document–Document) & 0.63 & 0.63 & 0.63 \\
+    P(Document–Code | Document–Document) & 0.52 & 0.67 & 0.54 \\
+    --- & --- & --- & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}

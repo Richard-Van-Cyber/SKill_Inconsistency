@@ -1,0 +1,18 @@
+\begin{table}[t]
+  \centering
+  \caption{Agent impact before and after verifying the SkillBench findings.}
+  \label{tab:rq1-verified-impact}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Corpus & Findings & Blocks execution & Share & Silent error & Share \\
+    \midrule
+    GitHub (unverified) & 1022 & 44 & 4.3\% & 796 & 77.9\% \\
+    SkillBench (as audited) & 377 & 41 & 10.9\% & 231 & 61.3\% \\
+    SkillBench (verified) & 160 & 27 & 16.9\% & 100 & 62.5\% \\
+    \bottomrule
+  \end{tabular}
+  }%
+\end{table}

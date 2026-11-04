@@ -1,0 +1,18 @@
+\begin{table}[t]
+  \centering
+  \caption{Distribution of inconsistencies across artifact boundaries. The boundary names the pair of artifacts whose contract is violated: Document--Code (a described behaviour the implementation does not honour), Document--Document (two documentation artifacts disagree) and Skill--Environment (a stated runtime assumption that does not hold).}
+  \label{tab:rq1-boundary}
+  \small
+  \setlength{\tabcolsep}{4pt}
+
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Artifact boundary & \makecell{GitHub Skills\\($n$)} & \makecell{GitHub Skills\\(\%)} & \makecell{SkillBench\\($n$)} & \makecell{SkillBench\\(\%)} & \makecell{Both\\($n$)} & \makecell{Both\\(\%)} \\
+    \midrule
+    Skill–Environment & 366 & 35.8\% & 125 & 33.2\% & 491 & 35.1\% \\
+    Document–Code & 344 & 33.7\% & 178 & 47.2\% & 522 & 37.3\% \\
+    Document–Document & 312 & 30.5\% & 74 & 19.6\% & 386 & 27.6\% \\
+    Total & 1022 & 100.0\% & 377 & 100.0\% & 1399 & 100.0\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}

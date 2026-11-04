@@ -1,0 +1,40 @@
+\begin{table}[t]
+  \centering
+  \caption{Distribution of contract inconsistencies over the taxonomy, combining the artifact boundary (level 1) and the inconsistency type (level 2). GitHub findings are unverified; SkillBench uses the verified subset.}
+  \label{tab:rq1-taxonomy-distribution}
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
+  \begin{tabular}{l l r r}
+    \toprule
+    Artifact boundary (L1) & Inconsistency type (L2) & GitHub (unverified) & SkillBench (verified) \\
+    \midrule
+    \multirow{4}{*}{Document–Code} & over\_promised & 250 (24.5\%) & 73 (45.6\%) \\
+     & semantic\_conflict & 93 (9.1\%) & 16 (10.0\%) \\
+     & under\_promised & 1 (0.1\%) & 1 (0.6\%) \\
+    \cmidrule(lr){2-4}
+     & subtotal & 344 (33.7\%) & 90 (56.2\%) \\
+    \addlinespace[4pt]
+    \multirow{4}{*}{Document–Document} & shared\_concept\_definition\_conflict & 162 (15.9\%) & 27 (16.9\%) \\
+     & cross\_document\_process\_conflict & 81 (7.9\%) & 2 (1.2\%) \\
+     & interface\_contract\_mismatch & 69 (6.8\%) & 16 (10.0\%) \\
+    \cmidrule(lr){2-4}
+     & subtotal & 312 (30.5\%) & 45 (28.1\%) \\
+    \addlinespace[4pt]
+    \multirow{5}{*}{Skill–Environment} & environment\_fact\_conflict & 274 (26.8\%) & 21 (13.1\%) \\
+     & external\_resource\_invalid & 44 (4.3\%) & 3 (1.9\%) \\
+     & external\_service\_contract\_change & 30 (2.9\%) & 1 (0.6\%) \\
+     & dependency\_version\_drift & 18 (1.8\%) & 0 (0.0\%) \\
+    \cmidrule(lr){2-4}
+     & subtotal & 366 (35.8\%) & 25 (15.6\%) \\
+    \midrule
+    \multicolumn{2}{l}{Total} & 1{,}022 (100.0\%) & 160 (100.0\%) \\
+    \bottomrule
+  \end{tabular}
+  }%
+
+  \vspace{2pt}
+  \begin{minipage}{\linewidth}
+    \footnotesize\raggedright Each type is listed under the boundary at which the contract breaks; the rule marks where the types of a boundary end and its subtotal begins. Shares are within each corpus and may not sum exactly because of rounding.
+  \end{minipage}
+\end{table}

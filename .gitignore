@@ -1,0 +1,39 @@
+# --- secrets -------------------------------------------------------------
+# config.yaml is generated from config.example.yaml; never commit real keys
+skill-audit/config.yaml
+.env
+.env.*
+*.key
+*.pem
+
+# --- python --------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# --- pipeline artefacts --------------------------------------------------
+.audit-cache/
+audit_report.json
+**/outputs/verdicts/
+**/outputs/*.log
+**/out/
+**/out2/
+**/out3/
+
+# --- data (kept out of this repo on purpose) ----------------------------
+tasks/
+wildskills/
+hf_downloads/
+**/inputs/
+**/runs/
+**/traces/
+**/*.jsonl
+**/*.zst
+
+# --- os ------------------------------------------------------------------
+.DS_Store
+Thumbs.db

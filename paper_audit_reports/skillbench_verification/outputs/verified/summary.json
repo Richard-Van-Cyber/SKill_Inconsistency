@@ -1,0 +1,60 @@
+{
+ "prevalence": {
+  "GitHub (as audited, unverified)": {
+   "n_skills": 488,
+   "with_findings": 329,
+   "prevalence": 67.41803278688525,
+   "total": 1022,
+   "mean": 2.0942622950819674,
+   "median": 1.0,
+   "p90": 5.0,
+   "max": 18,
+   "dens_median": 1.5518928275758261
+  },
+  "SkillBench (as audited)": {
+   "n_skills": 87,
+   "with_findings": 72,
+   "prevalence": 82.75862068965517,
+   "total": 377,
+   "mean": 4.333333333333333,
+   "median": 3.0,
+   "p90": 10.0,
+   "max": 20,
+   "dens_median": 1.7857142857142856
+  },
+  "SkillBench (verified)": {
+   "n_skills": 87,
+   "with_findings": 56,
+   "prevalence": 64.36781609195403,
+   "total": 160,
+   "mean": 1.839080459770115,
+   "median": 1.0,
+   "p90": 4.0,
+   "max": 18,
+   "dens_median": 0.5913272010512484
+  }
+ },
+ "multi_boundary": {
+  "GitHub (unverified)": {
+   "with_findings": 329,
+   "ge2": 184,
+   "all3": 66,
+   "ge2_pct": 55.92705167173252,
+   "all3_pct": 20.060790273556233
+  },
+  "SkillBench (as audited)": {
+   "with_findings": 72,
+   "ge2": 40,
+   "all3": 13,
+   "ge2_pct": 55.55555555555556,
+   "all3_pct": 18.055555555555557
+  },
+  "SkillBench (verified)": {
+   "with_findings": 56,
+   "ge2": 13,
+   "all3": 1,
+   "ge2_pct": 23.214285714285715,
+   "all3_pct": 1.7857142857142858
+  }
+ }
+}

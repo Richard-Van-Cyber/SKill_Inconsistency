@@ -1,0 +1,18 @@
+\begin{table}[t]
+  \centering
+  \caption{Artifact-boundary mix before and after verifying the SkillBench findings.}
+  \label{tab:rq1-verified-boundary}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Artifact boundary & GitHub (unverified) (n) & GitHub (unverified) (\%) & SkillBench (as audited) (n) & SkillBench (as audited) (\%) & SkillBench (verified) (n) & SkillBench (verified) (\%) \\
+    \midrule
+    Document–Code & 344 & 33.7\% & 178 & 47.2\% & 90 & 56.2\% \\
+    Document–Document & 312 & 30.5\% & 74 & 19.6\% & 45 & 28.1\% \\
+    Skill–Environment & 366 & 35.8\% & 125 & 33.2\% & 25 & 15.6\% \\
+    \bottomrule
+  \end{tabular}
+  }%
+\end{table}

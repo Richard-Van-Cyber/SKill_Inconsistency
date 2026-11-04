@@ -1,0 +1,74 @@
+{
+ "wildskills": {
+  "label": "GitHub Skills",
+  "n_skills": 488,
+  "n_with_findings": 329,
+  "prevalence": 0.6741803278688525,
+  "n_findings": 1022,
+  "mean": 2.0942622950819674,
+  "median": 1.0,
+  "p90": 5.0,
+  "p99": 11.259999999999991,
+  "max": 18,
+  "iqr": [
+   0.0,
+   3.0
+  ],
+  "n_zero": 159,
+  "claims_total": 144119,
+  "claims_median": 72.0,
+  "doc_claims_median": 64.5,
+  "density_claims_median": 1.5518928275758261,
+  "density_claims_mean": 3.9165351922825677,
+  "density_claims_iqr": [
+   0.0,
+   4.071325499896929
+  ],
+  "density_claims_pooled": 0.7091361999458781,
+  "density_doc_median": 1.7366172405126914,
+  "density_doc_pooled": 1.2454301730441142,
+  "n_with_code": 126,
+  "density_loc_median": 1.1100433668440766,
+  "density_loc_mean": 8.142717514124293,
+  "density_loc_pooled": 0.12827589597584657,
+  "code_loc_median_all": 0.0,
+  "blocking": 44,
+  "silent": 796
+ },
+ "skillbench": {
+  "label": "SkillBench",
+  "n_skills": 87,
+  "n_with_findings": 72,
+  "prevalence": 0.8275862068965517,
+  "n_findings": 377,
+  "mean": 4.333333333333333,
+  "median": 3.0,
+  "p90": 10.0,
+  "p99": 17.42,
+  "max": 20,
+  "iqr": [
+   1.0,
+   7.0
+  ],
+  "n_zero": 15,
+  "claims_total": 23842,
+  "claims_median": 119.0,
+  "doc_claims_median": 113.0,
+  "density_claims_median": 1.7857142857142856,
+  "density_claims_mean": 5.597744348088924,
+  "density_claims_iqr": [
+   0.33783783783783783,
+   6.4863445378151265
+  ],
+  "density_claims_pooled": 1.5812431842966195,
+  "density_doc_median": 2.158273381294964,
+  "density_doc_pooled": 1.8466813617438158,
+  "n_with_code": 42,
+  "density_loc_median": 1.360888430298701,
+  "density_loc_mean": 2.3872249686725553,
+  "density_loc_pooled": 0.5364485472319799,
+  "code_loc_median_all": 0.0,
+  "blocking": 41,
+  "silent": 231
+ }
+}

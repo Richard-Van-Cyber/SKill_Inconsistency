@@ -1,0 +1,30 @@
+\begin{table}[t]
+  \centering
+  \caption{Severity and agent-impact profile of the confirmed inconsistencies.}
+  \label{tab:rq1-severity}
+  \small
+  \setlength{\tabcolsep}{4pt}
+
+  \begin{tabular}{llrr}
+    \toprule
+    Corpus & Category & Findings & Share of findings \\
+    \midrule
+    GitHub Skills & Critical & 7 & 0.7\% \\
+    GitHub Skills & High & 204 & 20.0\% \\
+    GitHub Skills & Medium & 574 & 56.2\% \\
+    GitHub Skills & Low & 237 & 23.2\% \\
+    GitHub Skills & Confirmed to block execution & 44 & 4.3\% \\
+    GitHub Skills & Produce silent errors & 796 & 77.9\% \\
+    SkillBench & Critical & 2 & 0.5\% \\
+    SkillBench & High & 115 & 30.5\% \\
+    SkillBench & Medium & 178 & 47.2\% \\
+    SkillBench & Low & 82 & 21.8\% \\
+    SkillBench & Confirmed to block execution & 41 & 10.9\% \\
+    SkillBench & Produce silent errors & 231 & 61.3\% \\
+    \bottomrule
+  \end{tabular}
+  \\[2pt]
+  \begin{minipage}{\linewidth}
+    \footnotesize\raggedright A finding is *silent* when the agent-visible outcome is wrong without an observable failure signal.
+  \end{minipage}
+\end{table}

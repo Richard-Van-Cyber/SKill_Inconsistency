@@ -1,0 +1,49 @@
+# LLM backend configuration (used by Comprehension Agent and LLM Checkers)
+llm:
+  provider: "deepseek"
+  model: "deepseek-chat"
+  api_key: "${DEEPSEEK_API_KEY}"
+  base_url: "https://api.deepseek.com"
+  temperature: 0.1
+  max_tokens: 8192
+
+# Secondary validation model (can be a stronger model)
+validator:
+  provider: "deepseek"
+  model: "deepseek-chat"
+  api_key: "${DEEPSEEK_API_KEY}"
+  base_url: "https://api.deepseek.com"
+  temperature: 0.0
+  max_tokens: 8192
+
+# Comprehension Agent settings
+comprehension:
+  first_lines_count: 3              # lines sent per file in Round1
+  max_file_size_kb: 200             # files larger than this are truncated in Round2
+
+# Pipeline control
+pipeline:
+  parallel_llm_checkers: true
+  run_url_validation: true
+  report_under_promised: false      # whether to include low-severity under-promised findings
+  skip_checkers: []                 # e.g. ["impl_under_promised_checker"]
+  cache_dir: "./.audit-cache"       # reuse comprehension results for an unchanged skill dir (null to disable)
+
+# Hard checker settings
+hard_checkers:
+  url_validator:
+    timeout_seconds: 5
+    max_concurrent: 10
+    # off      — never probe URLs
+    # lenient  — (default) probe only URLs a command actually calls; dead
+    #            documentation links are dropped instead of reported
+    # strict   — additionally report dead documentation links (low severity,
+    #            never as an execution blocker)
+    mode: lenient
+  schema_comparator:
+    strict_type_match: true         # false allows int/float compatible types to pass
+
+# Report output
+report:
+  output_path: "./audit_report.json"
+  include_suppressed: false         # include filtered false-positives with suppressed status

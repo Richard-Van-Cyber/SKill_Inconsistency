@@ -1,0 +1,166 @@
+% ===========================================================================
+% Figure 1 -- motivating example
+%
+% Two separate background panels: (a) document, (b) code.
+% Three coloured frames, one per inconsistency:
+%   1 blue   -- both ends in the document  (inter-document layer)
+%   2 orange -- document to code           (document-code layer)
+%   3 teal   -- document to code           (document-code layer)
+%
+% Geometry is driven by explicit coordinates so left/right panels and all
+% three frames are perfectly aligned rectangles.
+% ===========================================================================
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      tt/.style={font=\ttfamily\scriptsize, align=left, text=black,
+                 inner sep=0pt, outer sep=0pt},
+      head/.style={font=\footnotesize\bfseries, text=black,
+                   inner sep=0pt, outer sep=0pt},
+      lab/.style={font=\scriptsize\bfseries, inner sep=0pt, outer sep=0pt},
+    ]
+
+  % -----------------------------------------------------------------------
+  % Geometry constants (all in cm)
+  % -----------------------------------------------------------------------
+  % panels
+  \def\PadO{0.22}      % outer padding around each panel
+  \def\PadI{0.20}      % inner padding (content inset from panel edge)
+  \def\Gap{0.55}       % gap between the two panels
+  \def\Lw{6.8}         % left panel content width
+  \def\Rw{5.6}         % right panel content width
+  % derived
+  \pgfmathsetmacro{\LpanL}{-\PadO}
+  \pgfmathsetmacro{\LpanR}{\Lw+\PadO}
+  \pgfmathsetmacro{\RpanL}{\Lw+\Gap+\PadO*2+\Gap*0}
+  \pgfmathsetmacro{\RpanR}{\RpanL+\Rw+\PadO*2}
+  % content x-anchors
+  \def\Lx{0}
+  \pgfmathsetmacro{\Rx}{\Lw+\Gap+\PadO+\PadI+0.18}
+
+  % vertical anchors (top of each group label)
+  \def\Ya{ 0.00}
+  \def\Yb{-2.60}
+  \def\Yc{-5.45}
+  % bottom of last content (set after node placement via coordinate)
+
+  % -----------------------------------------------------------------------
+  % Headers
+  % -----------------------------------------------------------------------
+  \node[head, anchor=south west] at (\Lx, 0.42)
+    {(a)\ \texttt{SKILL.md}\,---\,the document};
+  \node[head, anchor=south west] at (\Rx, 0.42)
+    {(b)\ \texttt{scripts/}\,---\,the code};
+
+  % -----------------------------------------------------------------------
+  % GROUP 1  inter-document layer  (blue, left panel only)
+  % -----------------------------------------------------------------------
+  \node[lab, text=blue!65!black, anchor=north west] (T1) at (\Lx, \Ya)
+    {\textcircled{1}\enspace inter-document layer};
+  \node[tt, text width=\Lw cm, anchor=north west] (L1)
+    at ([yshift=-4pt]T1.south west){%
+      :3\enspace "data visualizations with D3.js \colorbox{green!15}{(v6)}."\\[1pt]
+      :75\ \ "Pin D3 to a specific version
+              (default: \colorbox{red!15}{d3@7.9.0})."\\[1pt]
+      \textcolor{black!45}{// one file, two contradictory major versions}};
+
+  % -----------------------------------------------------------------------
+  % GROUP 2  document-code layer  (orange)
+  % -----------------------------------------------------------------------
+  \node[lab, text=orange!80!black, anchor=north west] (T2) at (\Lx, \Yb)
+    {\textcircled{2}\enspace document--code layer};
+  \node[tt, text width=\Lw cm, anchor=north west] (L2)
+    at ([yshift=-4pt]T2.south west){%
+      :59\ "Sort input rows deterministically before binding to marks."\\[1pt]
+      :60\ "\ldots\,stable grouping order
+            (\colorbox{green!15}{Array.from(grouped.keys()).sort()})"\\[1pt]
+      \textcolor{black!45}{// the row order must be stable and explicit}};
+  \node[tt, text width=\Rw cm, anchor=north west] (R2)
+    at ([yshift=-4pt]T2.south west -| \Rx pt,0){%
+      bubble\_chart\_example.js:62\\[1pt]
+      \colorbox{red!15}{const sectors =}\\
+      \colorbox{red!15}{[...new Set(data.map(d => d.sector))]}\\[1pt]
+      \textcolor{black!45}{// unsorted: order follows input}};
+
+  % -----------------------------------------------------------------------
+  % GROUP 3  document-code layer  (teal)
+  % -----------------------------------------------------------------------
+  \node[lab, text=teal!65!black, anchor=north west] (T3) at (\Lx, \Yc)
+    {\textcircled{3}\enspace document--code layer};
+  \node[tt, text width=\Lw cm, anchor=north west] (L3)
+    at ([yshift=-4pt]T3.south west){%
+      :68--71\ "if a force layout is required: fix the
+                \colorbox{green!15}{tick count},
+                fix initial positions \colorbox{green!15}{deterministically},
+                run \colorbox{green!15}{exactly N ticks} and stop."\\[1pt]
+      \textcolor{black!45}{// layout output must be reproducible}};
+  \node[tt, text width=\Rw cm, anchor=north west] (R3)
+    at ([yshift=-4pt]T3.south west -| \Rx pt,0){%
+      bubble\_chart\_example.js:56\\[1pt]
+      \colorbox{red!15}{const simulation =}\\
+      \colorbox{red!15}{d3.forceSimulation(data)}\\[1pt]
+      \textcolor{black!45}{// default tick count, no seed,}\\
+      \textcolor{black!45}{// no fixed initial positions}};
+
+  % -----------------------------------------------------------------------
+  % Coloured inconsistency frames
+  % Each frame spans from its label node to the bottom of its content,
+  % left frame: Lx .. LpanR,  cross frame: Lx .. RpanR
+  % We derive the bottom from the content nodes.
+  % -----------------------------------------------------------------------
+  % F1: left panel only
+  \draw[blue!60!black, rounded corners=3pt, line width=0.8pt]
+    ([xshift=-5pt, yshift=5pt]T1.north west)
+    rectangle
+    ([xshift=\LpanR pt-\Lx pt+5pt, yshift=-5pt]L1.south west
+      |- [yshift=-5pt]L1.south east);
+
+  % F2: full width
+  \draw[orange!75!black, rounded corners=3pt, line width=0.8pt]
+    ([xshift=-5pt, yshift=5pt]T2.north west)
+    rectangle
+    ([yshift=-5pt]R2.south east |- [yshift=-5pt]L2.south east);
+
+  % F3: full width
+  \draw[teal!60!black, rounded corners=3pt, line width=0.8pt]
+    ([xshift=-5pt, yshift=5pt]T3.north west)
+    rectangle
+    ([yshift=-5pt]R3.south east |- [yshift=-5pt]L3.south east);
+
+  % -----------------------------------------------------------------------
+  % Background panels  (drawn last so they go behind frames)
+  % We use the bounding boxes of the content nodes plus fixed padding.
+  % -----------------------------------------------------------------------
+  % Determine overall vertical extent from node positions
+  \coordinate (top_y)  at ([yshift=+0.55cm]T1.north);
+  \coordinate (bot_y)  at ([yshift=-0.28cm]L3.south);
+
+  \begin{scope}[on background layer]
+    % Left panel
+    \fill[black!3, rounded corners=4pt]
+      (top_y -| \LpanL pt,0) rectangle (bot_y -| \LpanR pt,0);
+    \draw[black!22, rounded corners=4pt]
+      (top_y -| \LpanL pt,0) rectangle (bot_y -| \LpanR pt,0);
+    % Right panel
+    \fill[black!3, rounded corners=4pt]
+      (top_y -| \RpanL pt,0) rectangle (bot_y -| \RpanR pt,0);
+    \draw[black!22, rounded corners=4pt]
+      (top_y -| \RpanL pt,0) rectangle (bot_y -| \RpanR pt,0);
+  \end{scope}
+
+  \end{tikzpicture}
+
+  \caption{A single real Skill, \texttt{d3-visualization}, with the document on
+    the left and the code it ships on the right. Each coloured frame encloses
+    both ends of one inconsistency; its horizontal span reveals the boundary.
+    \textcircled{1}~Both ends sit inside the document (two lines contradict each
+    other on the D3 major version), making it an \emph{inter-document}
+    inconsistency. \textcircled{2}~The sort rule is stated in the document but
+    violated in the shipped code. \textcircled{3}~The deterministic-layout mandate
+    appears in the document, but the shipped example uses an unseeded,
+    default-tick simulation. \textcircled{2} and \textcircled{3} are
+    \emph{document--code} inconsistencies. All three are discoverable by reading
+    the files, before any agent runs.}
+  \label{fig:motivation}
+\end{figure}
