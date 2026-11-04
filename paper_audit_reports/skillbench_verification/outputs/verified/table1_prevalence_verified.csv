@@ -1,0 +1,10 @@
+Metric,"GitHub (as audited, unverified)",SkillBench (as audited),SkillBench (verified)
+Skills audited,488,87,87
+Skills with at least one inconsistency,329,72,56
+Prevalence (%),67.4,82.8,64.4
+Total inconsistencies,1022,377,160
+Mean per skill,2.09,4.33,1.84
+Median per skill,1,3,1
+P90 per skill,5,10,4
+Max per skill,18,20,18
+Inconsistencies per 100 contract claims (median skill),1.55,1.79,0.59

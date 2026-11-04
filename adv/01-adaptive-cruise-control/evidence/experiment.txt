@@ -1,0 +1,12 @@
+cell                                              score  rise_s    vmax  ssErr  speedOK  antiWU
+-----------------------------------------------------------------------------------------------
+adaptive-cruise-control__OriginalSkill__r1          0.0  8.00 30.60  0.15     True    True
+adaptive-cruise-control__OriginalSkill__r2          0.0  8.00 46.76  0.94    False   False
+adaptive-cruise-control__OriginalSkill__r3          0.0 16.30 29.55  0.69    False    True
+adaptive-cruise-control__RepairedSkill__r1          0.0  8.50 31.30  0.01     True    True
+adaptive-cruise-control__RepairedSkill__r2          0.0  8.00 36.54  1.16    False    True
+adaptive-cruise-control__RepairedSkill__r3          0.0  n/a  n/a  n/a    False   False
+
+condition         n  mean score  speedCtrl OK  anti-windup in pid_controller.py  med vmax
+OriginalSkill     3       0.000             1                                 2     30.60
+RepairedSkill     3       0.000             1                                 2     33.92

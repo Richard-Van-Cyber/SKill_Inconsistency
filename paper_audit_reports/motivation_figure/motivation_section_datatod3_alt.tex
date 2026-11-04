@@ -1,0 +1,75 @@
+% ===========================================================================
+% Motivating Example -- paper-ready LaTeX
+% Pairs with Figure 1 (motivation_figure.tex).
+% Replace \ref{sec:corpus}, \ref{sec:taxonomy}, \ref{fig:motivation}.
+% No extra packages: \texttt, \textbf, \emph, $..$ are all kernel.
+% ===========================================================================
+\section{Motivating Example}
+\label{sec:motivation}
+%
+% Local only: lets TeX stretch a little rather than overflow when a long
+% unbreakable \texttt{} token (e.g. highlightBubble) lands at the end of a line.
+% Verified clean from 8cm to 16cm text width.
+\begingroup\emergencystretch=3em
+
+An Agent Skill is a directory an agent loads as instructions: a \texttt{SKILL.md}
+contract, together with the scripts and assets that contract refers to. The
+agent cannot execute the contract to see whether it holds. It reads the text and
+acts on it. We take one Skill from the SkillBench corpus we audit in
+Section~\ref{sec:corpus} and read its contract the way an agent would.
+
+\texttt{d3-visualization} is a chart-building Skill. Line~3 of its
+\texttt{SKILL.md} describes it as producing visualizations ``with D3.js (v6)''.
+Line~75 tells the reader to pin D3 to ``a specific version (default:
+\textbf{d3@7.9.0})'', and the next line recommends vendoring that build. The
+document names two major versions of its own central dependency, seventy lines
+apart.
+
+The same directory ships an example that links a table to the chart. Its header
+promises ``Two-way highlighting (click table row $\rightarrow$ highlight chart
+element)''. The click handler calls \texttt{highlightBubble}, which
+no file in the Skill defines; the chart example defines
+\texttt{selectBubble} instead. The call is guarded by a
+\texttt{typeof} check, so it raises nothing. It does nothing either.
+
+A third inconsistency runs between the document and the example it ships.
+\texttt{SKILL.md:70} requires the layout to ``fix initial positions
+deterministically'' and to ``run exactly N ticks and stop''; that same example
+builds a default \texttt{d3.forceSimulation}, with neither fixed initial
+positions nor a tick limit.
+
+All three are settled by reading the files, and all three are instances of the
+inconsistency types we define in Section~\ref{sec:taxonomy}. They are also not
+of one kind: a contradiction inside a single document, a mismatch between two
+files that must interoperate, and a rule the shipped example violates. Nothing in
+the artifact tells a reader which statement to trust
+(Figure~\ref{fig:motivation}).
+
+\paragraph{Observation 1.} \emph{A Skill contract can contradict itself, not only
+its code.} Two of the defects above are internal to the contract: its own
+description and its own pinning rule disagree on the dependency version, and its
+own example calls a helper the contract never defines. Neither is settled by
+consulting an external fact, and neither involves an implementation file. If such
+self-contradictions are common, then treating a Skill as a single trusted
+specification is unsafe in a way that documentation-quality checks do not catch.
+RQ1 asks how often real Skills contain contract inconsistencies, of which kinds,
+and how they are distributed.
+
+\paragraph{Observation 2.} \emph{Being detectable and being consequential are
+independent.} All three defects are visible without running anything, yet they
+are not interchangeable. The version conflict can be settled by inspecting the
+vendored bundle. The undefined call fails silently and costs nothing until
+something downstream depends on the highlight. The determinism rule is violated
+by the very artifact the contract tells the reader to use. The text gives no
+signal about which of the three will change what an agent builds. RQ2 asks
+whether inconsistencies can be found automatically, and whether the ones an agent
+will act on can be separated from the ones it will read past.
+
+\paragraph{Observation 3.} \emph{Every path through a defective contract costs
+something.} An agent that notices the version conflict has to decide which of the
+two statements to believe, spending effort the contract should not have created.
+An agent that does not notice inherits the conflict into its output, and the
+defect surfaces, if at all, far from its cause. These costs are not comparable in
+kind, and neither shows up in a pass/fail result. RQ3 asks what an inconsistency
+costs an agent, and whether repairing it recovers the cost.
+\endgroup

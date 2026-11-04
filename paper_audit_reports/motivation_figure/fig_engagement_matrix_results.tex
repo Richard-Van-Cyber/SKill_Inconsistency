@@ -1,0 +1,121 @@
+% ===========================================================================
+% Figure 1 -- motivating example
+% One real Skill, three contract inconsistencies, two models.
+%
+% Skill: `d3-visualization` (SkillBench task `data-to-d3`).
+% All three defects were CONFIRMED by the independent re-verification:
+%   D1  document/shared_concept_definition_conflict  (high)
+%       SKILL.md front matter "D3.js (v6)" vs body "d3@7.9.0" /
+%       vendor/d3.v7.9.0.min.js   -- two statements in one document
+%   D2  document/interface_contract_mismatch         (high)
+%       interactive_table_example.js calls highlightBubble(), which no artifact
+%       defines (only selectBubble exists) -- two-way highlighting never fires
+%   D3  implementation/over_promised/missing_constraint_or_exception (medium)
+%       SKILL.md "### Data/Rendering determinism" rules vs the shipped
+%       bubble_chart_example.js using a default d3.forceSimulation
+%
+% Engagement (agent-authored blocks only, 9 runs per model, produced by
+% motivation_figure/analyse_case.py):
+%   D1   deepseek-flash 6/9   claude-haiku 0/9
+%   D2   deepseek-flash 1/9   claude-haiku 4/9
+%   D3   deepseek-flash 9/9   claude-haiku 0/9
+%
+% Packages: tikz (positioning, arrows.meta, fit, backgrounds, calc), xcolor
+% Serif + typewriter only.
+% ===========================================================================
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      pane/.style={draw=black!35, rounded corners=1.5pt, inner sep=5pt,
+                   fill=black!2, align=left, text=black},
+      tag/.style={font=\scriptsize, text=black!75},
+      note/.style={font=\scriptsize, text=black!70},
+      sq/.style={draw=black!45, line width=0.3pt, minimum size=3.1mm,
+                 inner sep=0pt},
+      on/.style={sq, fill=red!55, draw=red!55},
+      off/.style={sq, fill=white},
+    ]
+
+    % ================= (a) the skill and its three defects =================
+    \node[pane, text width=8.45cm] (skill) {%
+      {\ttfamily\scriptsize
+       \# d3-visualization\\[1pt]
+       \textcolor{black!55}{---}\\
+       \textcolor{black!55}{description: Build deterministic, verifiable}\\
+       \textcolor{black!55}{data visualizations with D3.js }\colorbox{red!18}{(v6)}\textcolor{black!55}{.}\\[3pt]
+       \textcircled{1}\ D1 --- one document, two versions\\
+       \ \ body pins \colorbox{red!18}{d3@7.9.0} / vendor/d3.v7.9.0.min.js\\[3pt]
+       \textcircled{2}\ D2 --- a call nobody defines\\
+       \ \ interactive\_table\_example.js:\\
+       \ \ \ \ \colorbox{red!18}{highlightBubble(d.ticker)};\ \ \textcolor{black!55}{// only selectBubble exists}\\[3pt]
+       \textcircled{3}\ D3 --- determinism promised, not shipped\\
+       \ \ "\#\# Data determinism / \#\# Rendering determinism"\\
+       \ \ \ \ vs.\ example's default \colorbox{red!18}{d3.forceSimulation}%
+      }};
+    \node[tag, above=1pt of skill.north west, anchor=south west]
+      {(a) one Skill contract, three confirmed inconsistencies};
+
+    % ================= (b) engagement matrix =================
+    \newcommand{\sqon}{\tikz[baseline=-0.55ex]\fill[red!55]
+      (0,0) rectangle (2.15mm,2.15mm);}
+    \newcommand{\sqoff}{\tikz[baseline=-0.55ex]\draw[black!40,line width=0.3pt,
+      fill=white] (0,0) rectangle (2.15mm,2.15mm);}
+    \node[pane, text width=5.35cm, right=1.05cm of skill] (eng) {%
+      {\scriptsize\setlength{\tabcolsep}{1.1pt}
+      \begin{tabular}{l ccc ccc ccc r}
+        & \multicolumn{3}{c}{NoSkill} & \multicolumn{3}{c}{Original}
+        & \multicolumn{3}{c}{Repaired} & \\[1pt]
+        \cline{2-4}\cline{5-7}\cline{8-10}
+        \texttt{deep} & \sqoff&\sqoff&\sqoff & \sqon&\sqon&\sqon
+                      & \sqon&\sqon&\sqon & 6/9\\
+        \texttt{haiku}& \sqoff&\sqoff&\sqoff & \sqoff&\sqoff&\sqoff
+                      & \sqoff&\sqoff&\sqoff & 0/9\\[2pt]
+        \texttt{deep} & \sqoff&\sqoff&\sqoff & \sqoff&\sqon&\sqoff
+                      & \sqoff&\sqoff&\sqoff & 1/9\\
+        \texttt{haiku}& \sqoff&\sqoff&\sqon  & \sqon&\sqon&\sqon
+                      & \sqoff&\sqoff&\sqoff & 4/9\\[2pt]
+        \texttt{deep} & \sqon&\sqon&\sqon & \sqon&\sqon&\sqon
+                      & \sqon&\sqon&\sqon & 9/9\\
+        \texttt{haiku}& \sqoff&\sqoff&\sqoff & \sqoff&\sqoff&\sqoff
+                      & \sqoff&\sqoff&\sqoff & 0/9\\
+      \end{tabular}}\\[5pt]
+      {\footnotesize D1 (rows 1--2), D2 (3--4), D3 (5--6); one square is one run.
+       \textcolor{red!55}{$\blacksquare$}~the defect entered the agent's own
+       reasoning or code --- i.e. the agent either resolved it or copied it.}
+    };
+    \node[tag, above=1pt of eng.north west, anchor=south west]
+      {(b) did the agent have to deal with the defect?};
+
+    % ================= (c) the same skill, two behaviours =================
+    \node[pane, text width=13.9cm, below=1.0cm of skill.south west,
+          anchor=north west] (behaviour) {%
+      {\footnotesize
+       \texttt{deepseek-flash}\ \ argues with D1 ("the skill says pin d3@7.9.0, but the
+       task explicitly requires D3 v6"), reasons about D3 in 9/9 runs, finishes no run on its own --- all 9 end on the API budget (17--39 turns, median 30); 1/9 passes.\\[3pt]
+       \texttt{claude-haiku}\ \ never mentions D1 or D3 (0/9 each); when it does
+       touch D2 it copies the undefined call. It declares itself done in 8/9 runs
+       (12--28 turns, median 18) and scores 0/9.}%
+      };
+    \node[tag, above=1pt of behaviour.north west, anchor=south west]
+      {(c) what each agent did with it, and what it cost};
+
+    \draw[red!70, dashed, line width=0.5pt, -{Latex[length=1.5mm]}]
+      (skill.east) -- (eng.west);
+
+  \end{tikzpicture}
+
+  \caption{One Skill, three contract inconsistencies, two agents. The
+    \texttt{d3-visualization} contract carries a version conflict between its own
+    front matter and body (D1), a cross-file interface mismatch where the shipped
+    example calls a helper no artifact defines (D2), and a determinism rule the
+    shipped example does not honour (D3). All three are statically present in the
+    same artifact, yet (b) shows they do not reach every agent: D3 is engaged in
+    all nine strong-model runs and none of the weak-model runs, D1 in six versus
+    none, while D2 is engaged by neither model reliably. The same contract
+    therefore produces different behaviour and a different kind of cost (c):
+    \texttt{deepseek-flash} argues with the document and runs until its budget is
+    gone, whereas \texttt{claude-haiku} stops early, convinced it is finished,
+    and never passes.}
+  \label{fig:motivation}
+\end{figure}

@@ -1,0 +1,12 @@
+targets: rise<10s, overshoot<5%, steady-state error<0.5 m/s (set speed 30.0, |a|<=3.0)
+
+gains (kp,ki,kd)      variant         rise s    vmax  overshoot %  SS err  verdict
+----------------------------------------------------------------------------------
+(2.0, 0.1, 0.5)       no anti-windup    8.00   36.80         22.7   2.979  FAIL  <- overshoot  <- SS err
+(2.0, 0.1, 0.5)       anti-windup       8.00   30.07          0.2   0.032  PASS
+(1.0, 0.05, 0.2)      no anti-windup    8.00   36.63         22.1   3.020  FAIL  <- overshoot  <- SS err
+(1.0, 0.05, 0.2)      anti-windup       8.10   30.17          0.6   0.086  PASS
+(4.0, 0.3, 1.0)       no anti-windup    8.00   39.77         32.6   2.648  FAIL  <- overshoot  <- SS err
+(4.0, 0.3, 1.0)       anti-windup       8.00   30.05          0.2   0.274  PASS
+(0.5, 0.02, 0.1)      no anti-windup    8.00   35.14         17.1   3.078  FAIL  <- overshoot  <- SS err
+(0.5, 0.02, 0.1)      anti-windup       8.50   30.17          0.6   0.129  PASS

@@ -1,0 +1,268 @@
+% ============================================================================================
+% RQ3 — Through what process do skill inconsistencies cost the agent?
+% 441 paired cells (49 tasks x 3 models x trials r1-r3, RQ2 cell-selection rule).
+% ============================================================================================
+
+\section{RQ3: Through what process do skill inconsistencies cost the agent?}
+\label{sec:rq3}
+
+RQ2 measures \emph{how much} a repaired skill changes outcomes; it cannot say \emph{why}. A repair
+changes one element of one skill, and the aggregate effect is the sum of many executions in which an
+agent may or may not encounter that element, may or may not adopt it, and may or may not recover. This
+section opens that aggregate along a three-stage chain --- \emph{exposure}, \emph{response},
+\emph{outcome} --- asking, in order,
+
+\begin{itemize}
+  \item[\textbf{RQ3.1}] \emph{Exposure.} Do agents come into contact with the skill at all?
+  \item[\textbf{RQ3.2}] \emph{Response.} Given contact, what do they do with the inconsistent element?
+  \item[\textbf{RQ3.3}] \emph{Outcome.} What does each response cost, in score and in compute?
+\end{itemize}
+
+The questions are ordered by dependence: a response presupposes contact, and a cost presupposes a
+response.
+
+\paragraph{Trajectory coding.} We analyse the trajectories of the 441 paired cells used by RQ2 (49
+tasks $\times$ 3 models $\times$ trials r1--r3), each contrasting \textsc{OriginalSkill} against
+\textsc{FixedSkill} on an identical task. Cells are resolved with RQ2's selection rule --- current
+task-package image, latest study among duplicates --- because 134 of the 882 (axis, task, arm, trial)
+keys have between two and five candidate runs spread across studies; resolving by manifest order
+silently mixes stale versions and, as we report, inverts one of our principal results. For each task
+the repair diff yields three task-specific anchors: the files the repair changed, code-like tokens
+present only in the shipped skill (\emph{shipped-only}), and tokens present only in the repaired skill
+(\emph{fixed-only}); the diff also yields the verifier checks tied to the changed behaviour. A
+deterministic coder then walks each trajectory, separating what the agent \emph{authored} (tool
+arguments) from what tools \emph{returned} (file contents, command output), and records skill contact,
+use of a changed file, manifestation of a shipped-only anchor, per-check verifier failures, and
+turn-level timestamps. Two decisions carry the analysis. First, \emph{contact is not use}: reading a
+file that contains an anchor is not adopting it, and running the skill's script is not triggering the
+inconsistency; only an authored shipped-only form, or execution of a changed file, counts as use.
+Second, \emph{response is attributed by pairing}: a behaviour is attributed to the inconsistency only
+when the \textsc{FixedSkill} arm of the same cell does not exhibit it, which separates the
+inconsistency's effect from a model's habits. The coder is rule-based; its behavioural labels are
+validated on a stratified sample by hand, reported in \S\ref{sec:threats}.
+
+\begin{table}[t]
+\centering\small
+\caption{Trajectory coding scheme. Exposure is contact; the response is what follows, attributed
+against the paired repaired arm. Outcome is measured by the harness and verifier, never inferred.}
+\label{tab:coding}
+\begin{tabular}{@{}p{2.6cm}p{12.1cm}@{}}
+\toprule
+Code & Operational definition \\
+\midrule
+\textbf{Exposed} & the agent reads the skill, whether by opening a file under \texttt{skills/} or by
+  loading it through the CLI's \texttt{Skill} tool \\
+\textbf{Unused} & the agent never reads the skill; the inconsistency is outside the execution \\
+\textbf{Bypass} & exposed, but the inconsistent element is never used: no changed file is executed and
+  no shipped-only form is authored \\
+\textbf{Follow} & the inconsistent behaviour is used and reaches the artifact: a tied verifier check
+  fails in \textsc{OriginalSkill} and passes in \textsc{FixedSkill} \\
+\textbf{Recover} & the inconsistent behaviour fires, but the run still passes the tied checks \\
+\textbf{BothFail} & the tied check fails in both arms; the repair was not decisive (Section~3.3) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% --------------------------------------------------------------------------------------------
+\subsection{RQ3.1: Exposure --- contact is nearly universal}
+\label{sec:rq3-exposure}
+
+\begin{table}[t]
+\centering\small
+\caption{Exposure. A run is exposed if the agent reads the skill at all; the remaining 13 runs are
+unused (8 where neither arm read the skill, 5 where only \textsc{OriginalSkill} skipped it). The route
+columns overlap: \emph{path} is opening a file under \texttt{skills/}, \emph{tool} is loading the skill
+by name through the CLI's \texttt{Skill} tool.}
+\label{tab:exposure}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+ & & & & \multicolumn{3}{c}{Access route} \\
+\cmidrule(l){5-7}
+Model & $n$ & Exposed & Rate & Path only & Tool only & Both \\
+\midrule
+Claude Haiku 4.5  & 147 & 144 &  98\%  &  75 & 21 & 48 \\
+Qwen3.6-35B       & 147 & 137 &  93\%  & 120 & 1  & 16 \\
+DeepSeek-V4-Flash & 147 & 147 & 100\%  & 119 & 1  & 27 \\
+\midrule
+All               & 441 & 428 & 97.1\% & 314 & 23 & 91 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Contact is the norm, not the exception (Table~\ref{tab:exposure}): across all 441 executions the agent
+reads the skill in 97.1\% of runs, and the strongest model reads it in every single run. Only 13 runs
+(2.9\%) are unexposed. Two methodological points guard this measure. Contact is counted on both access
+routes, because Haiku reaches the skill through the \texttt{Skill} tool far more often than the other
+two (69 runs against 28 and 17); counting only path-based access would understate exposure by five
+points overall and by fifteen points for Haiku. And the measure is not inflated by directory listing:
+no execution inspects \texttt{skills/} without also reading a file.
+
+\textbf{Finding 1.} Whether an agent sees the inconsistency is essentially constant across models and
+therefore cannot explain the RQ2 gaps. Contact is not where the models differ.
+
+% --------------------------------------------------------------------------------------------
+\subsection{RQ3.2: Response --- what differs is what happens after contact}
+\label{sec:rq3-response}
+
+\begin{table}[t]
+\centering\small
+\caption{Response, given exposure. \emph{BothFail} is where the tied check fails under both skills
+and is analysed further in Section~3.3.}
+\label{tab:response}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Response & Haiku & Qwen & DeepSeek & All \\
+\midrule
+Recover $\rightarrow$ success   & 40 & 33 & \textbf{82} & 155 \\
+Follow $\rightarrow$ failure   & \textbf{44} & 35 & 18 &  97 \\
+BothFail                       & 40 & 43 & 20 & 103 \\
+Used, no effect                &  9 & 11 & 19 &  39 \\
+Bypass                         & 11 & 15 &  8 &  34 \\
+Unused                         &  3 & 10 &  0 &  13 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The models are indistinguishable in exposure but sharply distinguishable in what they do next
+(Table~\ref{tab:response}). Haiku follows the inconsistency into failure in 30\% of its runs, Qwen in
+24\%, and DeepSeek in 12\%; recovery shows the reverse ordering, at 27\%, 22\% and 56\%. Haiku and
+Qwen also bypass the inconsistent element more often than DeepSeek, and Qwen is the only model that
+leaves skills unread at a non-trivial rate.
+
+\textbf{Finding 2.} The models differ after contact, not at contact: whether an agent adopts what it
+reads, rather than whether it reads at all, is the decisive step.
+
+\textbf{Finding 3.} The per-model counts of following-into-failure --- Haiku 44, Qwen 35, DeepSeek 18
+--- reproduce the ordering of the RQ2 repair gains exactly (Haiku $+0.136$, Qwen $+0.085$, DeepSeek
+$+0.023$, not significant). The aggregate repair effect is therefore the number of executions in which
+the agent adopts the inconsistency and delivers it. This ordering is visible only under RQ2's
+cell-selection rule: resolving duplicate cells by manifest order yields Haiku 34 and Qwen 35,
+spuriously inverting it.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig-response-type.pdf}
+\caption{Response composition by inconsistency type and model ($n = 36, 21, 15, 15, 12$ executions
+per type respectively; bars are normalised to 100\%, so segments are read as shares). \textsc{BothFail}
+is a task-difficulty control. The models diverge after contact in every type, but most sharply in
+\texttt{over\_promised}, where the share followed into failure runs from 22\% (DeepSeek) to 50\%
+(Haiku); Qwen converts the same type into the unrecoverable control most often (25\%). Models are
+ordered as in Table~\ref{tab:rq2-effectiveness}.}
+\label{fig:response-type}
+\end{figure*}
+
+Figure~\ref{fig:response-type} disaggregates the same responses by model and by inconsistency type.
+The model gradient is not the product of a single type: it holds within every type, and it is
+steepest in \texttt{over\_promised}, where the share followed into failure ranges from 22\% (DeepSeek)
+to 50\% (Haiku).
+
+\textbf{Finding 4.} Following the inconsistency into failure is concentrated in \texttt{over\_promised}
+(41 of the 97 follow cases), in which the documentation promises a capability the code never
+implements. Conversely, \texttt{semantic\_conflict} is recovered in 13 of its 18 cases: a contradiction
+in meaning is noticed and worked around far more often than a missing capability.
+
+% --------------------------------------------------------------------------------------------
+\subsection{RQ3.3: Outcome --- the score is lost in one place, the compute everywhere}
+\label{sec:rq3-outcome}
+
+\begin{table}[t]
+\centering\small
+\caption{Outcome by response. $n$ is the number of paired executions and \emph{fires} the subset in
+which the inconsistency actually manifested, on which the footprint is measured. $\Delta$score and net
+$\Delta$token are \textsc{FixedSkill} $-$ \textsc{OriginalSkill} per run, so a positive token value
+means the shipped skill spent more. The footprint is the segment from the turn the incident first
+fired to the turn the agent settled on the corrected form, or to the end of the run if it never did.
+\textsc{BothFail} is analysed further in Table~\ref{tab:bothfail}; the \textsc{Bypass} and
+\textsc{Unused} rows are not attributable because the inconsistent element was never used.}
+\label{tab:outcome}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Response & $n$ (fires) & $\Delta$score & net $\Delta$token & footprint turns & footprint (s) \\
+\midrule
+Follow $\rightarrow$ failure  & 97 (87)  & $+0.366$ & $+34$k & 14.4 & 104 \\
+Recover $\rightarrow$ success & 155 (155) & $-0.038$ & $-57$k & 12.3 & 60 \\
+Bypass                        & 34 (4)   & $+0.097$ & $+2$k  &  3.8 & 40 \\
+BothFail                      & 103 (87) & $+0.030$ & $+7$k  & 19.6 & 169 \\
+Used, no effect               & 39 (3)   & $-0.047$ & $-44$k & 11.3 & 24 \\
+Unused                        & 13 (3)   & $+0.127$ & $+4$k  & 16.0 & 88 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Finding 5.} The repair's entire benefit is concentrated in one cell of the matrix
+(Table~\ref{tab:outcome}). Following the inconsistency into failure costs $0.366$ of the score and
+repairing it recovers it; every other class sits at $\Delta \approx 0$. Moreover the per-incident loss
+is nearly independent of the model: among the follow executions, $\Delta$score is $+0.351$ (Haiku,
+$n{=}44$), $+0.372$ (Qwen, $n{=}35$) and $+0.393$ (DeepSeek, $n{=}18$). Models differ in how often
+an inconsistency is followed, not in what it costs when it is.
+
+\textbf{Finding 6.} Footprint and net cost diverge, and the table shows this within single rows.
+Recovering and following produce similar footprints (12.3 and 14.4 turns), yet the net token
+difference is $-57$k for the former and $+34$k for the latter: on Recover cells the repaired arm
+spends $57$k tokens \emph{more}, because a more complete skill induces more work, which offsets the
+detour the agent would otherwise take. Repair buys correctness, not thrift. Footprint is also not
+cross-model comparable in seconds, because the local 4-bit Qwen deployment is an order of magnitude
+slower (a follow detour costs it 205 seconds against 49 for Haiku and 27 for DeepSeek at similar turn
+counts); turn counts, not seconds, are the comparable footprint.
+
+\begin{table}[t]
+\centering\small
+\caption{The \textsc{BothFail} class is not a single control: it decomposes by how many tied checks
+the repair changed. A quarter of it is genuinely neutral, but more than a third shows a real gain and
+more than a quarter is actively harmful.}
+\label{tab:bothfail}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Repair's effect on the tied checks & $n$ & share & mean $\Delta$score \\
+\midrule
+Failure count reduced (partial fix)  & 38 & 37\% & $+0.352$ \\
+Failure count unchanged              & 37 & 36\% & $+0.011$ \\
+Failure count increased (adverse)    & 28 & 27\% & $-0.380$ \\
+\midrule
+Total                                & 103 & 100\% & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Finding 7.} The executions in which the tied check fails under both skills are not a task
+difficulty floor; they are heterogeneous (Table~\ref{tab:bothfail}). In 38 the repair reduced the
+number of failed tied checks and recovered $+0.352$ of score --- a genuine, partial success. In 37 the
+repair changed nothing, which is the true floor. And in 28 executions --- 6\% of all paired runs ---
+repairing the skill made the outcome worse by $-0.380$ on average. These adverse cases cluster in a
+handful of tasks (e.g.\ \texttt{promql-lint-gate}, \texttt{pdf-forms}, \texttt{dingtalk-todo}) and
+reproduce the negative-$\Delta$ tasks already visible in RQ2; they show that a repair, while removing
+one inconsistency, can still mislead the agent.
+
+\textbf{Finding 8.} Attribution is only possible where the treatment was administered. In
+\textsc{Bypass} and \textsc{Unused} the original arm never used the inconsistent element, so their
+score deltas are not the inconsistency's cost; the \emph{fires} column makes this visible ($4$ of $34$
+and $3$ of $13$). \textsc{Bypass} measures avoidance, not harm.
+
+% --------------------------------------------------------------------------------------------
+\subsection{RQ3 summary}
+\label{sec:rq3-summary}
+
+\begin{table}[t]
+\centering\small
+\caption{RQ3 in one table: the aggregate repair gain of RQ2 decomposes into the number of executions
+in which the agent adopts the inconsistency and delivers it.}
+\label{tab:rq3-summary}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & Haiku & Qwen & DeepSeek \\
+\midrule
+Exposure rate                    & 98\% & 93\% & 100\% \\
+Follow $\rightarrow$ failure     & \textbf{44} & 35 & 18 \\
+Recover $\rightarrow$ success    & 40 & 33 & \textbf{82} \\
+RQ2 repair gain $\Delta$(F$-$O)  & $+0.136$ & $+0.085$ & $+0.023$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Exposure is near-universal and nearly constant across models, so it cannot explain the RQ2 gaps. What
+differs is the response: the strongest model recovers from the inconsistency twice as often as it
+follows it, while the weaker two follow it about as often as they recover, and the count of
+follow-into-failure executions orders the models exactly as RQ2's repair gains do
+(Table~\ref{tab:rq3-summary}). The cost of an inconsistency has two separable parts --- the score lost
+when it is followed, and the compute consumed by the detours of runs that recover --- and the second
+leaves no trace in the aggregate score.

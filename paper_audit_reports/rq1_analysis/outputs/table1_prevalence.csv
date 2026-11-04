@@ -1,0 +1,14 @@
+Metric,GitHub Skills,SkillBench
+Skills audited,488,87
+Skills with at least one inconsistency,329 (67.4%),72 (82.8%)
+Total inconsistencies,1022,377
+Mean per skill,2.09,4.33
+Median per skill,1,3
+P90 per skill,5,10
+Max per skill,18,20
+Skills with zero findings,159 (32.6%),15 (17.2%)
+Median contract claims / skill,72,119
+Inconsistencies per 100 contract claims (median skill),1.55,1.79
+Inconsistencies per 100 contract claims (pooled),0.71,1.58
+Skills shipping code,126 (25.8%),42 (48.3%)
+"Inconsistencies per 100 LOC (median, code-bearing skills)",1.11,1.36

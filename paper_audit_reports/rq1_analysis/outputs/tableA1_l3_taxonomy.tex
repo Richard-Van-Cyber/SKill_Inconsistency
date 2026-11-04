@@ -1,0 +1,31 @@
+\begin{table}[t]
+  \centering
+  \caption{Full three-level taxonomy with the number of confirmed findings per type. Level-3 types are defined only for the Document--Code boundary; Skill--Env. = Skill--Environment, Doc--Code = Document--Code, Doc--Doc = Document--Document.}
+  \label{tab:rq1-taxonomy}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\ifdim\width>\linewidth \linewidth\else\width\fi}{!}{%
+  \begin{tabular}{lllrrr}
+    \toprule
+    Boundary & Level-2 type & Level-3 type & GitHub Skills & SkillBench & Total \\
+    \midrule
+    Skill--Env. & environment\_fact\_conflict & --- & 274 & 87 & 361 \\
+    Doc--Code & over\_promised & unimplemented\_feature & 153 & 87 & 240 \\
+    Doc--Doc & shared\_concept\_definition\_conflict & --- & 162 & 40 & 202 \\
+    Doc--Doc & interface\_contract\_mismatch & --- & 69 & 29 & 98 \\
+    Doc--Doc & cross\_document\_process\_conflict & --- & 81 & 5 & 86 \\
+    Doc--Code & over\_promised & missing\_constraint\_or\_exception & 46 & 21 & 67 \\
+    Skill--Env. & external\_resource\_invalid & --- & 44 & 12 & 56 \\
+    Doc--Code & semantic\_conflict & semantic\_param\_conflict & 35 & 16 & 51 \\
+    Doc--Code & over\_promised & missing\_return\_field & 30 & 20 & 50 \\
+    Doc--Code & over\_promised & missing\_parameter & 21 & 21 & 42 \\
+    Skill--Env. & external\_service\_contract\_change & --- & 30 & 10 & 40 \\
+    Skill--Env. & dependency\_version\_drift & --- & 18 & 16 & 34 \\
+    Doc--Code & semantic\_conflict & workflow\_conflict & 28 & 2 & 30 \\
+    Doc--Code & semantic\_conflict & semantic\_return\_conflict & 19 & 5 & 24 \\
+    Doc--Code & semantic\_conflict & side\_effect\_conflict & 11 & 5 & 16 \\
+    Doc--Code & under\_promised & implicit\_param\_support & 1 & 1 & 2 \\
+    \bottomrule
+  \end{tabular}
+  }%
+\end{table}

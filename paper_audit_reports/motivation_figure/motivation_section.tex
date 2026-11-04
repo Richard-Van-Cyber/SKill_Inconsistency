@@ -1,0 +1,78 @@
+% ===========================================================================
+% Motivating Example -- paper-ready LaTeX
+% Pairs with Figure 1 (motivation_figure.tex, Skill `d3-visualization`).
+% The figure puts the document on the left and the code on the right and marks
+% each inconsistency with a number at both of its ends.
+% Replace \ref{sec:corpus}, \ref{sec:taxonomy}, \ref{fig:motivation}.
+% ===========================================================================
+\section{Motivating Example}
+\label{sec:motivation}
+%
+% Local only: long unbreakable \texttt{} tokens would otherwise overflow.
+% Verified clean from 8cm to 16cm text width.
+\begingroup\emergencystretch=3em
+
+An Agent Skill is a directory an agent loads as instructions. It has two sides:
+a \texttt{SKILL.md} contract written for the reader, and the scripts that are
+supposed to carry it out. The agent cannot execute the contract to see whether
+it holds. It reads the text and acts on it. We take one Skill from the SkillBench
+corpus we audit in Section~\ref{sec:corpus} and read its contract the way an
+agent would.
+
+Figure~\ref{fig:motivation} puts the document on the left and the code on the
+right, and numbers every inconsistency at both of its ends. The boxes those ends
+sit in name its boundary. Both ends on the left is a document--document
+inconsistency; one end on each side is a document--code inconsistency.
+
+The first defect has both ends in the document. Line~3 of \texttt{SKILL.md}
+describes the Skill as producing visualizations ``with D3.js (v6)''. Line~75
+instructs the reader to pin D3 to ``a specific version (default:
+\texttt{d3@7.9.0})'', and the next line recommends vendoring
+\texttt{d3.v7.9.0.min.js}. One file, two major versions of its own central
+dependency.
+
+The second and third cross from the document into the code, and both are
+determinism rules that the shipped example breaks. Lines~59--60 require the
+reader to ``sort input rows deterministically before binding to marks'' and to
+use a ``stable grouping order (explicit
+\texttt{Array.from(grouped\allowbreak{}.keys()).sort()})''.
+\texttt{bubble\_\allowbreak{}chart\_\allowbreak{}example.js:62} builds its sector grouping as
+\texttt{[...new\allowbreak{}Set(data.map(d\allowbreak{} => d.sector))]}, which keeps the input order. The
+Skill's other example does sort its rows
+(\texttt{interactive\_\allowbreak{}table\_\allowbreak{}example.js:73}), so the two shipped examples
+disagree with each other as well.
+
+The third defect is the same shape. Lines~68--71 state that if a force layout is
+required the reader must ``fix the tick count, fix initial positions
+deterministically'' and ``run exactly N ticks and stop''.
+\texttt{bubble\_\allowbreak{}chart\_\allowbreak{}example.js:56} builds a default
+\texttt{d3.force\allowbreak{}Simulation(data)}: a tick count nobody sets, initial positions
+nobody fixes, and no seed. An agent that copies the example inherits a layout the
+contract forbids.
+
+All three are settled by opening the two boxes, before any agent runs, and all
+three are instances of the types we define in Section~\ref{sec:taxonomy}.
+
+\medskip\noindent\textbf{Observation 1.} \emph{The boundary is a property of the
+artifacts, not a label we assign.} The version is contradicted inside one file;
+the two determinism rules are contradicted across two. Neither is a
+documentation-style problem: link checkers, linters and doc builds all pass on
+this Skill. RQ1 asks which kinds of contract inconsistency occur in real Skills,
+how often, and how they distribute across the boundaries.
+
+\medskip\noindent\textbf{Observation 2.} \emph{Reading the artifacts tells you
+what is inconsistent, not what an agent will do about it.} Both determinism
+rules are stated as requirements, and both are broken silently: an unsorted
+grouping and a default force layout both draw a perfectly plausible chart, only
+not the same one twice. An agent may follow the rules, ignore them, or never read
+them, and the artifacts do not say which. RQ2 asks whether these inconsistencies
+can be found automatically, and whether the ones an agent will build on can be
+separated from the ones it will read past.
+
+\medskip\noindent\textbf{Observation 3.} \emph{They are not equally repairable.} Correcting the version is a one-token edit once someone decides
+which line to trust. Correcting either determinism rule means changing a layout
+or a sort and accepting that the picture will move, and the two fixes land in
+different places: one in the grouping code, one in the simulation setup. Repair
+therefore has to be evaluated per defect, not per Skill. RQ3 asks what each kind
+of inconsistency costs an agent, and whether repairing it recovers that cost.
+\endgroup

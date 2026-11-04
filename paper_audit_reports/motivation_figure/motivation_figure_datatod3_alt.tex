@@ -1,0 +1,88 @@
+% ===========================================================================
+% Figure 1 -- motivating example (INTRODUCTION figure)
+%
+% Objective phenomenon only: one real Skill whose contract is inconsistent
+% with itself and with the code it ships. No experimental arms, no models --
+% every statement below is checkable by opening the files.
+%
+% Skill: `d3-visualization` of SkillBench task `data-to-d3`.
+% All three defects were CONFIRMED by the independent re-verification:
+%   D1  document / shared_concept_definition_conflict   (high)
+%       SKILL.md:3   "…data visualizations with D3.js (v6)."
+%       SKILL.md:75  "Pin D3 to a specific version (default: d3@7.9.0)."
+%   D2  document / interface_contract_mismatch          (high)
+%       interactive_table_example.js:6   "Two-way highlighting (click table
+%                                        row -> highlight chart element)"
+%       interactive_table_example.js:107 highlightBubble(ticker);
+%       -> grep for a definition of highlightBubble returns nothing
+%   D3  implementation / over_promised / missing_constraint_or_exception (medium)
+%       SKILL.md:70  "fix initial positions deterministically, … run exactly
+%                     N ticks and stop."
+%       bubble_chart_example.js:56  d3.forceSimulation(data)   // default
+%
+% Packages: tikz (positioning, fit, backgrounds), xcolor
+% Serif + typewriter only (no sans, no bold-italic).
+% ===========================================================================
+\begin{figure}[t]
+  \centering
+  % ---- WIDTH KNOB: pane text width; figure width = this + 12pt ----
+  %      7.8cm -> ~8.2cm total (narrow)   10.0cm -> ~10.4cm total (wide)
+  \newlength{\motw}\setlength{\motw}{7.8cm}
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      pane/.style={draw=black!35, rounded corners=1.5pt, inner sep=6pt,
+                   fill=black!2, align=left, text=black},
+      tag/.style={font=\scriptsize, text=black!70},
+    ]
+
+    \node[pane, text width=\motw] (body) {%
+      {\ttfamily\scriptsize
+       d3-visualization/\\
+       \textcolor{black!55}{// the agent reads it as one contract}\\[3pt]
+       \textcolor{black!30}{\rule{\motw}{0.3pt}}\\[3pt]
+       \textcircled{1}\ \ SKILL.md:3\\
+       \ \ \ \ "build \ldots with D3.js \colorbox{red!18}{(v6)}."\\
+       \ \ \ \ SKILL.md:75\\
+       \ \ \ \ "Pin D3 to a specific version\\
+       \ \ \ \ \ (default: \colorbox{red!18}{d3@7.9.0})."\\
+       \ \ {\normalfont\footnotesize$\rightarrow$ two versions in one document}\\
+       \ \ {\normalfont\scriptsize\textcolor{black!60}\hfill [\,document / shared-concept\,]}\\[4pt]
+       \textcircled{2}\ \ interactive\_table\_example.js:6\\
+       \ \ \ \ "Two-way highlighting\\
+       \ \ \ \ \ (click table row $\rightarrow$ chart element)"\\
+       \ \ \ \ interactive\_table\_example.js:107\\
+       \ \ \ \ \ \ \colorbox{red!18}{highlightBubble(ticker)};\\
+       \ \ \ \ \ \ \textcolor{black!55}{// defined nowhere in the Skill}\\
+       \ \ {\normalfont\footnotesize$\rightarrow$ only one of the two directions works}\\
+       \ \ {\normalfont\scriptsize\textcolor{black!60}\hfill [\,interface mismatch\,]}\\[4pt]
+       \textcircled{3}\ \ SKILL.md:70\\
+       \ \ \ \ "fix initial positions deterministically,\\
+       \ \ \ \ \ \ldots\ run exactly N ticks and stop."\\
+       \ \ \ \ bubble\_chart\_example.js:56\\
+       \ \ \ \ \ \ \colorbox{red!18}{d3.forceSimulation(data)}\\
+       \ \ \ \ \ \ \textcolor{black!55}{// default, unseeded}\\
+       \ \ {\normalfont\footnotesize$\rightarrow$ the example breaks that rule}\\
+       \ \ {\normalfont\scriptsize\textcolor{black!60}\hfill [\,over-promise\,]}%
+      }};
+    \node[tag, above=1pt of body.north west, anchor=south west]
+      {One Skill, three contract inconsistencies};
+
+    \node[pane, text width=\motw, below=0.45cm of body] (concl) {%
+      {\footnotesize
+       All three are visible from the files alone, before any agent runs, and
+       the contract gives no way to tell which statement to trust.}%
+      };
+
+  \end{tikzpicture}
+
+  \caption{A single real Skill, \texttt{d3-visualization}, whose contract is
+    inconsistent with itself and with the code it ships: the document names two
+    different D3 versions in two of its own lines \textcircled{1}, instructs the
+    reader to enable a two-way highlight by calling a function that no file
+    defines \textcircled{2}, and mandates deterministic layouts while shipping an
+    example built on a default, unseeded force simulation \textcircled{3}.
+    All three are confirmed inconsistencies under the taxonomy of
+    Section~\ref{sec:taxonomy}, and all three are discoverable by reading the
+    artifacts.}
+  \label{fig:motivation}
+\end{figure}

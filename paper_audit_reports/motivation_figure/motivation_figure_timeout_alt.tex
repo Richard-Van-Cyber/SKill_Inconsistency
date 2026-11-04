@@ -1,0 +1,85 @@
+% ===========================================================================
+% Figure 1 (ALTERNATIVE, v2) -- motivation example
+% "One parameter, two defaults; the agent pays for the difference."
+%
+% Real instance: SkillBench task `latex-formula-extraction`, finding F-001
+% (`implementation / semantic_conflict / semantic_param_conflict` after
+% re-verification; the audit had labelled it document/interface_contract_mismatch).
+%   contract       : marker/SKILL.md  L25                      timeout=600
+%   implementation : marker/scripts/marker_to_markdown.py  L55  timeout=120
+%                    (the CLI default, L101, is also 120)
+% Trajectory evidence: 3 runs, success_rate 0.0, 88 turns, 24 errors,
+% 38 recovery turns = 43.2% of turns in the error-repair loop.
+% ===========================================================================
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      pane/.style={draw=black!35, rounded corners=1.5pt, inner sep=5pt,
+                   fill=black!2, align=left, text=black},
+      tag/.style={font=\scriptsize, text=black!75},
+      note/.style={font=\scriptsize, text=black!70},
+    ]
+    \node[pane, text width=5.85cm] (contract) {%
+      {\ttfamily\scriptsize
+       \#\# Python API\\[1pt]
+       - pdf\_to\_markdown(pdf\_path, *,\\
+       \ \ \ \ \colorbox{green!18}{timeout=600}, cleanup=True) -> str\\[2pt]
+       \ \ - Exceptions: \ldots\ TimeoutError\\
+       \ \ \ \ if it exceeds the timeout\\[2pt]
+       - Tips: \colorbox{green!18}{bump timeout}\\
+       \ \ for large PDFs%
+      }};
+    \node[tag, above=1pt of contract.north west, anchor=south west]
+      {(a) contract --- \texttt{marker/SKILL.md}};
+    \node[pane, text width=6.65cm, right=2.35cm of contract] (impl) {%
+      {\ttfamily\scriptsize
+       def pdf\_to\_markdown(pdf\_path, *,\\
+       \ \ \ \ \ \ \ \ \colorbox{red!18}{timeout: int = 120},\\
+       \ \ \ \ \ \ \ \ cleanup: bool = True) -> str:\\[2pt]
+       \ \ """\ldots marker\_single typically\\
+       \ \ \ \ \ finishes within $\sim$1 minute."""\\[2pt]
+       \ \ \ldots\\
+       \ \ raise TimeoutError(\\
+       \ \ \ \ f"marker\_single timed out\\
+       \ \ \ \ \ \ \ after \{timeout\}s")%
+      }};
+    \node[tag, above=1pt of impl.north west, anchor=south west]
+      {(b) implementation --- \texttt{marker\_to\_markdown.py}};
+    \draw[red!70, dashed, line width=0.5pt, -{Latex[length=1.5mm]}]
+      (contract.east) -- (impl.west);
+    \node[note, text=red!70, fill=white, inner sep=1.2pt, align=center,
+          font=\scriptsize, above=1pt] at ($(contract.east)!0.5!(impl.west)$)
+      {two defaults};
+    \node[pane, text width=13.9cm, below=1.35cm of contract.south west,
+          anchor=north west] (result) {%
+      {\ttfamily\scriptsize
+       TimeoutError: marker\_single timed out after
+       \colorbox{red!18}{120s}\ \ // the default it inherits\\[2pt]
+       \ \ \ \ \ldots the agent retries with the value the contract states\ldots\\[2pt]
+       TimeoutError: marker\_single timed out after
+       \colorbox{red!18}{600s}%
+      }};
+    \node[tag, above=1pt of result.north west, anchor=south west]
+      {(c) what the run looks like (3/3 runs, one task)};
+    \draw[red!70, line width=0.5pt, -{Latex[length=1.5mm]}]
+      ([xshift=-0.35cm]impl.south) -- ++(0,-0.55) -- ([xshift=-0.35cm]result.north);
+    \node[note, text=red!70, anchor=north east, align=right, font=\scriptsize]
+      at ([xshift=-0.50cm,yshift=-0.12cm]impl.south)
+      {the wrong default\\fires first};
+    \node[note, below=2pt of result.south west, anchor=north west,
+          text width=13.9cm] (verdict)
+      {The agent cannot win: the default it inherits is a fifth of what the
+       contract advertises, and the advertised value is not enough either. All
+       three runs fail, and 43.2\% of the agent's turns are spent in the
+       error--repair loop.};
+  \end{tikzpicture}
+  \caption{One contract inconsistency, end to end. The contract (a) documents a
+    \texttt{timeout} default of 600\,s and tells the agent to raise it for large
+    PDFs; the implementation (b) defaults to 120\,s in both the Python API and
+    the CLI. The agent first inherits the undocumented 120\,s default, then
+    follows the contract and passes 600\,s explicitly --- and times out again
+    (c). Nothing about this task is ambiguous except that number, yet the
+    mismatch consumes 43.2\% of the agent's turns and the run never finishes.}
+  \label{fig:motivation}
+\end{figure}

@@ -1,0 +1,56 @@
+% ===========================================================================
+% ALTERNATIVE layout for Figure 1: wide-and-short (pane text width 10.0cm,
+% figure ~10.4cm x ~9cm). The default `motivation_figure.tex` is the
+% narrow-and-tall variant (~8.2cm x ~11.2cm).
+% Same content, same packages (tikz + xcolor; no amssymb needed).
+% ===========================================================================
+\begin{figure}[t]
+  \centering
+  \newlength{\motw}\setlength{\motw}{10.0cm}
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      pane/.style={draw=black!35, rounded corners=1.5pt, inner sep=6pt,
+                   fill=black!2, align=left, text=black},
+      tag/.style={font=\scriptsize, text=black!70},
+    ]
+    \node[pane, text width=\motw] (body) {%
+      {\ttfamily\scriptsize
+       d3-visualization/\ \ \textcolor{black!55}{// one contract}\\[3pt]
+       \textcolor{black!30}{\rule{\motw}{0.3pt}}\\[3pt]
+       \textcircled{1}\ \ SKILL.md:3\ \ "build \ldots with D3.js \colorbox{red!18}{(v6)}."\\
+       \ \ \ \ SKILL.md:75\ \ "Pin D3 to a specific version\\
+       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (default: \colorbox{red!18}{d3@7.9.0})."\\
+       \ \ \ \ {\normalfont\footnotesize$\rightarrow$ two versions in one document
+         \hfill [\,document / shared-concept\,]}\\[4pt]
+       \textcircled{2}\ \ interactive\_table\_example.js:6\ \ "Two-way\\
+       \ \ \ \ \ \ \ \ \ \ \ highlighting (click table row $\rightarrow$ chart element)"\\
+       \ \ \ \ interactive\_table\_example.js:107\\
+       \ \ \ \ \ \ \colorbox{red!18}{highlightBubble(ticker)};\ \ \textcolor{black!55}{// defined nowhere}\\
+       \ \ \ \ {\normalfont\footnotesize$\rightarrow$ only one of the two directions works
+         \hfill [\,interface mismatch\,]}\\[4pt]
+       \textcircled{3}\ \ SKILL.md:70\ \ "fix initial positions\\
+       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deterministically, \ldots\ run exactly N ticks and stop."\\
+       \ \ \ \ bubble\_chart\_example.js:56\ \ \colorbox{red!18}{d3.forceSimulation(data)}\\
+       \ \ \ \ \ \ \ \ \textcolor{black!55}{// default, unseeded}\\
+       \ \ \ \ {\normalfont\footnotesize$\rightarrow$ the example breaks that rule
+         \hfill [\,over-promise\,]}%
+      }};
+    \node[tag, above=1pt of body.north west, anchor=south west]
+      {One Skill, three contract inconsistencies};
+    \node[pane, text width=\motw, below=0.5cm of body] (concl) {%
+      {\footnotesize
+       All three are visible from the files alone, before any agent runs, and
+       the contract gives no way to tell which statement to trust.}%
+      };
+  \end{tikzpicture}
+  \caption{A single real Skill, \texttt{d3-visualization}, whose contract is
+    inconsistent with itself and with the code it ships: the document names two
+    different D3 versions in two of its own lines \textcircled{1}, instructs the
+    reader to enable a two-way highlight by calling a function that no file
+    defines \textcircled{2}, and mandates deterministic layouts while shipping an
+    example built on a default, unseeded force simulation \textcircled{3}.
+    All three are confirmed inconsistencies under the taxonomy of
+    Section~\ref{sec:taxonomy}, and all three are discoverable by reading the
+    artifacts.}
+  \label{fig:motivation}
+\end{figure}

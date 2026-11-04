@@ -1,0 +1,213 @@
+{
+ "n_findings": 377,
+ "verdicts": {
+  "invalid": 217,
+  "mislabeled": 40,
+  "confirmed": 120
+ },
+ "survived_relaxed": 160,
+ "survived_strict": 120,
+ "by_l1": {
+  "implementation": {
+   "invalid": 88,
+   "mislabeled": 18,
+   "confirmed": 72
+  },
+  "environmental": {
+   "invalid": 91,
+   "confirmed": 18,
+   "mislabeled": 16
+  },
+  "document": {
+   "invalid": 38,
+   "confirmed": 30,
+   "mislabeled": 6
+  }
+ },
+ "by_l2": {
+  "over_promised": {
+   "invalid": 75,
+   "mislabeled": 14,
+   "confirmed": 60
+  },
+  "environment_fact_conflict": {
+   "invalid": 62,
+   "confirmed": 14,
+   "mislabeled": 11
+  },
+  "shared_concept_definition_conflict": {
+   "invalid": 22,
+   "confirmed": 17,
+   "mislabeled": 1
+  },
+  "interface_contract_mismatch": {
+   "invalid": 14,
+   "confirmed": 11,
+   "mislabeled": 4
+  },
+  "semantic_conflict": {
+   "confirmed": 12,
+   "mislabeled": 4,
+   "invalid": 10
+  },
+  "dependency_version_drift": {
+   "invalid": 15,
+   "mislabeled": 1
+  },
+  "external_resource_invalid": {
+   "invalid": 9,
+   "confirmed": 3
+  },
+  "external_service_contract_change": {
+   "mislabeled": 4,
+   "invalid": 5,
+   "confirmed": 1
+  },
+  "cross_document_process_conflict": {
+   "confirmed": 2,
+   "invalid": 2,
+   "mislabeled": 1
+  },
+  "semantically_conflicting": {
+   "invalid": 2
+  },
+  "under_promised": {
+   "invalid": 1
+  }
+ },
+ "by_checker": {
+  "impl_over_promised_checker": {
+   "invalid": 75,
+   "mislabeled": 14,
+   "confirmed": 60
+  },
+  "env_layer_checker": {
+   "invalid": 70,
+   "confirmed": 18,
+   "mislabeled": 16
+  },
+  "doc_layer_checker": {
+   "invalid": 38,
+   "confirmed": 30,
+   "mislabeled": 6
+  },
+  "impl_semantic_conflict_checker": {
+   "invalid": 12,
+   "confirmed": 12,
+   "mislabeled": 4
+  },
+  "env_constraint_checker": {
+   "invalid": 14
+  },
+  "url_validator": {
+   "invalid": 7
+  },
+  "schema_comparator": {
+   "invalid": 1
+  }
+ },
+ "by_severity": {
+  "medium": {
+   "invalid": 104,
+   "confirmed": 55,
+   "mislabeled": 19
+  },
+  "high": {
+   "invalid": 48,
+   "confirmed": 53,
+   "mislabeled": 14
+  },
+  "low": {
+   "mislabeled": 7,
+   "invalid": 64,
+   "confirmed": 11
+  },
+  "critical": {
+   "invalid": 1,
+   "confirmed": 1
+  }
+ },
+ "by_confidence": {
+  "verified": {
+   "invalid": 85,
+   "confirmed": 101,
+   "mislabeled": 32
+  },
+  "inferred": {
+   "invalid": 104,
+   "confirmed": 19,
+   "mislabeled": 7
+  },
+  "speculative": {
+   "invalid": 20
+  },
+  "(none)": {
+   "invalid": 8,
+   "mislabeled": 1
+  }
+ },
+ "reason_codes": {
+  "speculation": 29,
+  "no_contradiction": 113,
+  "not_a_contract": 27,
+  "out_of_scope": 1,
+  "evidence_not_found": 21,
+  "duplicate": 26
+ },
+ "corrected_flows": {
+  "implementation -> implementation": 2,
+  "environmental -> document": 6,
+  "environmental -> implementation": 10,
+  "document -> implementation": 6,
+  "implementation -> environmental": 7,
+  "implementation -> document": 9
+ },
+ "impact_on_rq1": {
+  "skills": 87,
+  "prevalence": {
+   "all": 82.8,
+   "strict": 56.3,
+   "relaxed": 64.4
+  },
+  "total_findings": {
+   "all": 377,
+   "strict": 120,
+   "relaxed": 160
+  },
+  "mean": {
+   "all": 5.24,
+   "strict": 1.67,
+   "relaxed": 2.22
+  },
+  "median": {
+   "all": 4,
+   "strict": 1,
+   "relaxed": 1
+  },
+  "max": {
+   "all": 20,
+   "strict": 14,
+   "relaxed": 18
+  },
+  "p90_all": 12,
+  "p90_strict": 3,
+  "p90_relaxed": 4,
+  "boundary": {
+   "all": {
+    "Document-Code": 178,
+    "Skill-Environment": 125,
+    "Document-Document": 74
+   },
+   "strict": {
+    "Document-Code": 72,
+    "Skill-Environment": 18,
+    "Document-Document": 30
+   },
+   "relaxed": {
+    "Document-Code": 90,
+    "Skill-Environment": 25,
+    "Document-Document": 45
+   }
+  }
+ }
+}

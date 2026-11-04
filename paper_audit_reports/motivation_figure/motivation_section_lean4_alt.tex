@@ -1,0 +1,70 @@
+% ===========================================================================
+% Motivating Example -- paper-ready LaTeX
+% Pairs with Figure 1 (motivation_figure.tex, Skill `lean4-proof`).
+% Replace \ref{sec:corpus}, \ref{sec:taxonomy}, \ref{fig:motivation}.
+% No extra packages beyond Figure 1's tikz/xcolor; text needs only the kernel.
+% ===========================================================================
+\section{Motivating Example}
+\label{sec:motivation}
+%
+% Local only: a long unbreakable \texttt{} token at the end of a narrow measure
+% would otherwise overflow. Verified clean from 8cm to 16cm text width.
+\begingroup\emergencystretch=3em
+
+An Agent Skill is a directory an agent loads as instructions: a \texttt{SKILL.md}
+contract, together with the scripts and reference documents that contract points
+to. The agent cannot execute the contract to see whether it holds. It reads the
+text and acts on it. We take one Skill from the SkillBench corpus we audit in
+Section~\ref{sec:corpus} and read its contract the way an agent would.
+
+\texttt{lean4-proof} helps an agent write Lean~4 proofs. It is 28 files, 26 of
+them Markdown. Line~18 of the proving Skill's \texttt{SKILL.md} describes an ``Interactive
+Commands'' table of ``10 slash commands''. Line~32 of the same file advertises
+``7 slash commands''. Fourteen lines apart, the document gives
+two answers, and nothing else in the Skill says which one holds.
+
+A second inconsistency sits between the documentation and the script it ships.
+the memory Skill's \texttt{SKILL.md:10} states that it ``enables persistent
+learning and knowledge accumulation across Lean 4 formalization sessions''. The
+helper that is supposed to provide this has its MCP call commented out at
+line~90 and prints, at line~94, \texttt{Pattern stored successfully
+(simulation)}. The agent that runs the helper is told the write
+succeeded. Nothing is written, and nothing fails.
+
+The third runs against a service the Skill does not own. The pattern reference
+calls \texttt{memory.\allowbreak{}search\_\allowbreak{}entities(\ldots)}; the Skill configures the
+community MCP server \texttt{@modelcontext\allowbreak{}protocol/\allowbreak{}server-\allowbreak{}memory}
+(\texttt{SKILL.md:371}), whose tools carry other names. The documented
+interface is not the interface the pinned service provides.
+
+All three are settled by reading the files, none of them raises an error when
+the Skill is used, and each one breaks a different pair of artifacts: the
+document against itself, the document against its code, and the Skill against
+its environment. All three are instances of the types we define in
+Section~\ref{sec:taxonomy} and carry high severity
+(Figure~\ref{fig:motivation}).
+
+\paragraph{Observation 1.} \emph{A Skill contract can contradict itself.} The
+command count above is stated twice, differently, in a single file. No
+documentation tool we know of looks for this: link checkers, linters and doc
+builds all pass. If a Skill is treated as one trusted specification, then a
+contract that disagrees with itself has no correct reading, and the agent cannot
+tell which half to follow. RQ1 asks which kinds of contract inconsistency occur
+in real Skills, how often, and how they distribute across the three boundaries.
+
+\paragraph{Observation 2.} \emph{The damaging ones are self-certifying.} The
+memory helper does not merely fail to persist: it prints a success message and
+exits cleanly. An agent has no signal to act on, and neither does the caller that
+reads its output. Detection therefore cannot stop at finding a mismatch; it has
+to separate the ones an agent will build on from the ones it will read past. RQ2
+asks whether these inconsistencies can be found automatically, and whether that
+ranking can be recovered from the artifacts.
+
+\paragraph{Observation 3.} \emph{The cost is deferred and the repair is not
+obvious.} An agent that trusts the memory Skill will store nothing, believe it
+has stored something, and lose the knowledge when the session ends. The failure
+surfaces later, in a different session, with no path back to its cause. Repair
+requires deciding which side is authoritative, and for the third defect that
+side is a third-party server the Skill does not control. RQ3 asks what an
+inconsistency costs an agent, and whether repairing it recovers that cost.
+\endgroup

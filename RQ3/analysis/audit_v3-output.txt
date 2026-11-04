@@ -1,0 +1,72 @@
+cell resolution: RQ2 selection rule (image-aligned, latest study) (882 Original/Fixed cells)
+====================================================================================================
+RQ3 AUDIT -- paired cells: 441
+====================================================================================================
+
+### 3.1 EXPOSURE  (exposure = the agent read the skill)
+  exposed  428/441 = 97.1%    unused 13/441 = 2.9%
+  axis          n  exposed   rate   read_via_Skill_tool
+  deepseek    147      147   100%                    28
+  haiku       147      144    98%                    69
+  qwen        147      137    93%                    17
+
+### 3.2 RESPONSE  (given exposure)
+   155  Recover -> success
+   103  BothFail (control)
+    97  Follow -> failure
+    39  Used, no effect
+    34  Bypass
+     8  Unused (both arms)
+     5  Unused (induced)
+
+  response                  deepseek     haiku      qwen
+  Bypass                           8        11        15
+  Follow -> failure               18        44        35
+  Recover -> success              82        40        33
+  BothFail (control)              20        40        43
+  Used, no effect                 19         9        11
+  Unused (induced)                 0         2         3
+  Unused (both arms)               0         1         7
+
+### 3.2b RESPONSE x TYPE (n>=6, current taxonomy first)
+  type                                              n  Bypass  Follow  Recover  BothFail
+  implementation/over_promised                    108       0      41       41        17
+  document/cross_document_process_conflict         63       0      18       23        21
+  script_logic_mismatch                            54       8       6       15         8
+  document/interface_contract_mismatch             45       0       6       13        18
+  environmental/environment_fact_conflict          45       0      13       11        21
+  document/shared_concept_definition_conflict      36       0       5       22         8
+  implementation/semantic_conflict                 18       0       4       13         1
+  docs_assume_absent_runtime_tool                   9       0       0        7         1
+  missing_promised_output_field                     9       3       0        0         0
+  doc_wrong_field_name                              9       7       0        0         0
+  hardcoded_output_path                             9       4       0        3         1
+  docs_missing_required_fields                      9       2       1        0         4
+  missing_promised_field                            9       2       0        3         0
+  ?                                                 9       8       0        0         1
+  environmental/external_service_contract_change    9       0       3        4         2
+
+### 3.3 OUTCOME  (per response class)
+  response                    n  scoreO  scoreF  dScore  dTok/run  dSec/run
+  Bypass                     34   0.852   0.949  +0.097       +2k       +38
+  Follow -> failure          97   0.632   0.999  +0.366      +34k       +76
+  Recover -> success        155   0.982   0.944  -0.038      -57k       -35
+  BothFail (control)        103   0.475   0.505  +0.030       +7k        +2
+  Used, no effect            39   0.994   0.947  -0.047      -44k       -19
+  Unused (induced)            5   0.743   1.000  +0.257       +7k       +76
+  Unused (both arms)          8   0.832   0.878  +0.045       +2k      -150
+
+### 3.3b INCIDENT COST measured inside the trajectory (the detour)
+  response                    n settled detour_turns turn_share detour_tok_est detour_secs
+  Bypass                      4       4          3.8        16%            15k          40
+  Follow -> failure          87      78         14.4        24%           148k         104
+  Recover -> success        155     131         12.3        28%           116k          60
+  BothFail (control)         87      72         19.6        34%           218k         169
+  Used, no effect             3       2         11.3        41%            98k          24
+  Unused (induced)            2       2         19.5        44%           317k          93
+  Unused (both arms)          1       1          9.0        12%           103k          80
+
+### 3.3c Follow -> failure, by model (score lost vs incidents)
+  deepseek   Follow=18   Recover=82   Bypass=8    mean dScore(Follow)=+0.393
+  haiku      Follow=44   Recover=40   Bypass=11   mean dScore(Follow)=+0.351
+  qwen       Follow=35   Recover=33   Bypass=15   mean dScore(Follow)=+0.372

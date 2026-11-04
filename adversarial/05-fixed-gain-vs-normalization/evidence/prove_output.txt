@@ -1,0 +1,17 @@
+=== the recipe exactly as SKILL.md ships it ===
+ffmpeg -i input.mp4 -af "volumedetect" -f null -
+
+volume=0.5  ==  -6.02 dB  — a constant, independent of the input
+
+target: ITU-R BS.1770-4 / verifier accepts measured LUFS in [-24.5, -21.5]
+
+what the recipe achieves, for a range of source levels:
+   source LUFS    after volume=0.5  compliant?
+         -14.0              -20.02          NO
+         -18.0              -24.02         yes
+         -23.0              -29.02          NO
+         -29.0              -35.02          NO
+         -35.0              -41.02          NO
+
+-> the recipe is compliant only when the source happens to sit near -17 LUFS.
+   A peak-driven gain (target - (measured peak)) lands on -23 for any source.

@@ -1,0 +1,4 @@
+Condition (order: the other two boundaries),GitHub (unverified),SkillBench (verified)
+"P(j | i), i = Document–Code",0.56 / 0.60,0.24 / 0.08
+"P(j | i), i = Document–Document",0.52 / 0.63,0.50 / 0.17
+"P(j | i), i = Skill–Environment",0.46 / 0.52,0.21 / 0.21

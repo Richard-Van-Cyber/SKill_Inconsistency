@@ -1,0 +1,68 @@
+% ---------------------------------------------------------------------------
+% Table: category distribution of the audited skills
+% Requires: \usepackage{booktabs,makecell,tabularx,array}
+%
+% WIDTH: one knob, \tabw below.
+%   1.00\linewidth = fill the column exactly (widest)
+%   0.88\linewidth = slightly narrower than the column  <-- current setting
+%   0.80\linewidth = clearly narrower
+%   a fixed size such as 11cm also works.
+% The table stays centred and the font size never changes.
+% Do not go much below ~8.5cm: the stacked count/percentage cells need that
+% much room before they start overflowing their columns.
+%
+% Two-column paper, table spanning both columns: use \begin{table*}[t] and
+% set \tabw to a fraction of \textwidth instead of \linewidth.
+% ---------------------------------------------------------------------------
+\begin{table}[t]
+  \centering
+  \caption{Category distribution of the audited skills.
+    SkillBench: the 87 audited benchmark tasks; WildSkills: the 488 audited
+    community skills collected from GitHub.}
+  \label{tab:skill-category-distribution}
+
+  \newlength{\tabw}
+  \setlength{\tabw}{0.88\linewidth}   % <-- width knob: 1.0 = full column
+  % Safety net: on a very narrow column 0.88\linewidth is too small for the
+  % stacked cells, so fall back to the full column width there.
+  \ifdim\tabw<8.5cm \setlength{\tabw}{\linewidth}\fi
+  \small
+  \setlength{\tabcolsep}{1.5pt}
+  \newcommand{\ncell}[2]{\makecell{#1\\[-1.5pt]\scriptsize#2\%}}
+  % l + eight X columns: first column natural, the eight category columns
+  % share all remaining space, so the table is exactly \tabw wide.
+  \begin{tabularx}{\tabw}{l *{8}{>{\centering\arraybackslash}X}}
+    \toprule
+    Source & SE & Med. & Fin. & Cyb. & Off. & Ind. & Sci. & Math \\
+    \midrule
+    \makecell[l]{SkillBench\\[-1.5pt]\scriptsize($n{=}87$)}
+      & \ncell{16}{18.4}  & \ncell{5}{5.7}   & \ncell{9}{10.3}  & \ncell{7}{8.0}
+      & \ncell{14}{16.1}  & \ncell{14}{16.1} & \ncell{14}{16.1} & \ncell{8}{9.2} \\
+    \addlinespace[2pt]
+    \makecell[l]{WildSkills\\[-1.5pt]\scriptsize($n{=}488$)}
+      & \ncell{395}{80.9} & \ncell{36}{7.4}  & \ncell{18}{3.7}  & \ncell{5}{1.0}
+      & \ncell{24}{4.9}   & \ncell{2}{0.4}   & \ncell{6}{1.2}   & \ncell{2}{0.4} \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{1pt}
+  \begin{minipage}{\tabw}   % note matches the table width
+    \footnotesize\raggedright
+    Each cell reports the number of skills, with its percentage share below it.
+    SE: Software Engineering; Med.: Media \& Content Production;
+    Fin.: Finance \& Economics; Cyb.: Cybersecurity;
+    Off.: Office \& White Collar; Ind.: Industrial \& Physical Systems;
+    Sci.: Natural Science; Math: Mathematics \& Operations Research.
+  \end{minipage}
+\end{table}
+
+% ---------------------------------------------------------------------------
+% Notes
+% * Fixed natural width instead of a fraction: replace \begin{tabularx}{\tabw}
+%   with \begin{tabularx}{8.5cm} (or any length).
+% * \setlength{\tabcolsep}{1.5pt} above is the inter-column padding; raise it
+%   (e.g. 4pt) on a wide column to spread the numbers out further.
+% * \renewcommand{\arraystretch}{1.15} increases row height.
+% * Scaling everything, fonts included: \resizebox{\tabw}{!}{\begin{tabular}...}
+%   (needs graphicx; only if tabularx is unavailable).
+% ---------------------------------------------------------------------------

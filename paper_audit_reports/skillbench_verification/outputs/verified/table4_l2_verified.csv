@@ -1,0 +1,11 @@
+Level-2 type,GitHub (unverified) (n),GitHub (unverified) (%),SkillBench (as audited) (n),SkillBench (as audited) (%),SkillBench (verified) (n),SkillBench (verified) (%)
+over_promised,250,24.5%,149,39.5%,73,45.6%
+shared_concept_definition_conflict,162,15.9%,40,10.6%,27,16.9%
+environment_fact_conflict,274,26.8%,87,23.1%,21,13.1%
+interface_contract_mismatch,69,6.8%,29,7.7%,16,10.0%
+semantic_conflict,93,9.1%,26,6.9%,16,10.0%
+external_resource_invalid,44,4.3%,12,3.2%,3,1.9%
+cross_document_process_conflict,81,7.9%,5,1.3%,2,1.2%
+under_promised,1,0.1%,1,0.3%,1,0.6%
+external_service_contract_change,30,2.9%,10,2.7%,1,0.6%
+dependency_version_drift,18,1.8%,16,4.2%,0,0.0%

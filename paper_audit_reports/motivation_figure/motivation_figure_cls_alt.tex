@@ -1,0 +1,97 @@
+% ===========================================================================
+% Figure 1 -- motivation example
+% "The contract promises a measurement the implementation cannot deliver,
+%  and the agent silently reports a perfect result."
+%
+% Real instance: SkillBench task `fix-visual-stability`,
+% finding F-003 (`implementation / over_promised / unimplemented_feature`,
+% severity high, silent) -- confirmed by the independent re-verification.
+%   contract       : browser-testing/SKILL.md  (lines 120-145)
+%   implementation : browser-testing/measure-cls.ts (lines 3-8, 44, 56-61)
+%
+% Packages: tikz (positioning, arrows.meta, fit, backgrounds, calc), xcolor
+% Requires only the standard serif/typewriter fonts -- no sans, no bold-italic.
+% ===========================================================================
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      pane/.style={draw=black!35, rounded corners=1.5pt, inner sep=5pt,
+                   fill=black!2, align=left, text=black},
+      tag/.style={font=\scriptsize, text=black!75},
+      note/.style={font=\scriptsize, text=black!70},
+    ]
+
+    % ---------------- (a) the contract ----------------
+    \node[pane, text width=5.95cm] (contract) {%
+      {\ttfamily\scriptsize
+       \#\# Measure CLS (Cumulative Layout Shift)\\[1pt]
+       \$ npx ts-node measure-cls.ts localhost:3000\\[2pt]
+       Output:\\[1pt]
+       \{\\
+       \ \ "cls": \colorbox{green!18}{0.42},\\
+       \ \ "rating": \colorbox{green!18}{"poor"},\\[1pt]
+       \ \ "shifts": [ \{ "value": 0.15,\\
+       \ \ \ \ \ \ \ \ \ \ \ \ "sources": [\{\ldots\}] \} ]\\
+       \}%
+      }};
+    \node[tag, above=1pt of contract.north west, anchor=south west]
+      {(a) contract --- \texttt{SKILL.md}};
+
+    % ---------------- (b) the implementation ----------------
+    \node[pane, text width=6.55cm, right=2.35cm of contract] (impl) {%
+      {\ttfamily\scriptsize
+       // CLS is directly available from CDP\\[1pt]
+       const cls =\\[1pt]
+       \ \ \colorbox{red!18}{metrics['CumulativeLayoutShift']} || 0;\\[3pt]
+       interface CLSResult \{\\
+       \ \ url: string; \ cls: number;\\
+       \ \ rating: 'good' | $\ldots$ | 'poor';\\
+       \ \ metrics: Record<string, number>;\\
+       \} \hfill // \colorbox{red!18}{no `shifts'}%
+      }};
+    \node[tag, above=1pt of impl.north west, anchor=south west]
+      {(b) implementation --- \texttt{measure-cls.ts}};
+
+    % mismatch marker between the two panes
+    \draw[red!70, dashed, line width=0.5pt, -{Latex[length=1.5mm]}]
+      (contract.east) -- (impl.west);
+    \node[note, text=red!70, fill=white, inner sep=1.2pt, align=center,
+          font=\scriptsize] at ($(contract.east)!0.5!(impl.west)$)
+      {not a CDP\\metric};
+
+    % ---------------- (c) what the agent ships ----------------
+    \node[pane, text width=13.9cm, below=1.35cm of contract.south west,
+          anchor=north west] (result) {%
+      {\ttfamily\scriptsize
+       \{\ \ "url": "localhost:3000",\ \
+       "cls": \colorbox{red!18}{0},\ \
+       "rating": \colorbox{red!18}{"good"}\ \ \}%
+      }};
+    \node[tag, above=1pt of result.north west, anchor=south west]
+      {(c) what the agent reports};
+
+    \draw[red!70, line width=0.5pt, -{Latex[length=1.5mm]}]
+      ([xshift=-0.35cm]impl.south) -- ++(0,-0.55) -- ([xshift=-0.35cm]result.north);
+    \node[note, text=red!70, anchor=north east, align=right, font=\scriptsize]
+      at ([xshift=-0.50cm,yshift=-0.12cm]impl.south)
+      {field is \texttt{undefined}\\ so \texttt{cls} is always 0};
+
+    \node[note, below=2pt of result.south west, anchor=north west,
+          text width=13.9cm] (verdict)
+      {A page that visibly shifts is reported as ``perfectly stable'', with no
+       error and no failing assertion --- the ``worst'' CLS rating is never emitted.};
+
+  \end{tikzpicture}
+
+  \caption{One contract inconsistency, end to end. The skill's contract (a)
+    documents a Cumulative Layout Shift measurement that returns the score, a
+    rating and a per-shift breakdown; the implementation (b) reads a Chrome
+    DevTools metric that \texttt{Performance.getMetrics} never returns and
+    never builds the promised \texttt{shifts} array, so the value falls back to
+    zero; the agent therefore reports a flawless page (c). This is the dominant
+    failure mode we measure: 45.6\% of the verified SkillBench findings are
+    over-promises, 56.2\% sit at the document--code boundary, and 62.5\% --
+    including this one -- fail silently.}
+  \label{fig:motivation}
+\end{figure}

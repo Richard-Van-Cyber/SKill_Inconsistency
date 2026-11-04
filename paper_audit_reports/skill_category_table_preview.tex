@@ -1,0 +1,10 @@
+% Standalone preview of the table, set to a typical single-column text width
+% (15 cm). Compile with:  tectonic -X compile skill_category_table_preview.tex
+% The table itself stretches to whatever \linewidth your paper provides.
+\documentclass[10pt]{article}
+\usepackage[paperwidth=21cm,paperheight=29.7cm,top=2.5cm,bottom=2.5cm,left=3cm,right=3cm]{geometry}
+\usepackage{booktabs,makecell,tabularx,array}
+\pagestyle{empty}
+\begin{document}
+\input{skill_category_table.tex}
+\end{document}
